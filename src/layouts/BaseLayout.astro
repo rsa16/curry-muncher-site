@@ -8,14 +8,23 @@ import '@fontsource/kurale';
 import CommonHead from "../components/CommonHead.astro";
 import Header from "../components/Header.astro"
 
-const { title, desc } = Astro.props;
+const { title, desc, image = "", type = { name: "website", properties: null } } = Astro.props;
+
+const url = `https://currymunchertls.rsaaa.xyz${Astro.url.pathname}`;
 ---
 
 <html transition:animate="none">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, minimum-scale=1">
-        <CommonHead title={title} description={desc}/>
+        <meta property="og:url" content={url}/>
+        
+        <CommonHead 
+            title={title} 
+            description={desc} 
+            image={image}
+            type={type}
+        />
     </head>
 
     <body transition:animate="none">

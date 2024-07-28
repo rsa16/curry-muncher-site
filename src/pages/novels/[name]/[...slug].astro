@@ -2,6 +2,7 @@
 import { useStoryblokApi } from '@storyblok/astro'
 import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro'
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { block } from 'sharp';
 
 export async function getStaticPaths()  {
     const storyblokApi = useStoryblokApi();
@@ -36,8 +37,35 @@ const { data } = await storyblokApi.get(`cdn/stories/novels/${name}${slug !== un
 });
 
 const story = data.story;
+const title = story.content.component === "Chapter" ?
+        `${story.content.displayName}: ${story.content.chapterTitle}` :
+        story.content.name;
+
+const desc = story.content.component === "Chapter" ?
+    (story.content.content.content[0].content.map((obj) => obj.text).join('') + ' ' +
+    story.content.content.content[1].content.map((obj) => obj.text).join('') + ' ' + 
+    story.content.content.content[2].content.map((obj) => obj.text).join(''))
+        .split(' ').slice(0, 35).join(' ') + '...' :
+    story.description;
 ---
 
-<BaseLayout>
+<BaseLayout 
+    title={title}
+    desc={desc}
+    image={story.content.component === "Chapter" ? 
+        story.content.novel.content.coverImage.filename : 
+        story.content.coverImage.url
+    }
+    type={{ 
+        name: "article",
+        properties: {
+            section: story.content.component === "Chapter" ? 
+                `${story.content.novel.content.name} - Vol ${story.content.volumeNumber}` : 
+                story.content.name,
+            
+            published_time: story.first_published_at
+        }
+    }}
+>
     <StoryblokComponent transition:animate="fade" slug={story.slug} blok={story.content} />
 </BaseLayout>

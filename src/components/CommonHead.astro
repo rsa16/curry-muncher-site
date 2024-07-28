@@ -1,6 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-const { title, description } = Astro.props;
+const { title, description, image, type } = Astro.props;
 ---
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
@@ -9,5 +9,18 @@ const { title, description } = Astro.props;
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="author" content="rsa16"/>
+
+<meta property="og:title" content={title}/>
+<meta property="og:image" content={image}/>
+<meta property="og:site_name" content="Curry Muncher Translations"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:description" content={description} />
+<meta property="og:type" content={type.name}/>
+
+{type.name === 'article' && 
+    <meta property="og:article:section" content={type.properties.section}/>
+    <meta property="og:article:published_time" content={type.properties.published_time}/>
+}
 
 <ViewTransitions/>
