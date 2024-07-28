@@ -78,9 +78,30 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
     @media only screen and (max-width: 768px) { 
         div {
             flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
         }
 
-        a {}
+        #selects {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            left: 0;
+            width: 100%;    
+        }
+        
+        #volumes {
+            margin-bottom: 10px;
+        }
+
+        a {
+            position: relative;
+            width: fit-content;
+            height: fit-content;
+            top: 7vh;
+        }
     }
 </style>
 

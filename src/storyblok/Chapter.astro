@@ -31,7 +31,7 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
 
 ---
 
-<div class="container">
+<div class="container mobileTransparent">
     <div id="chapterNav">
         <ChapterNavigation currentChapter={currentChapter} currentVolume={currentVolume} volumes={volumes} />
     </div>
@@ -133,7 +133,7 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
     }
 
     .transparent {
-        background-color: rgba(73, 9, 9, 0.3);
+        background-color: initial;
 		backdrop-filter: blur(125px);
     }
     main {
@@ -172,11 +172,27 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
 
     @media only screen and (max-width: 768px) { 
 
+        .novelName {
+            transform: translateY(-200%);
+        }
+        .transparent {
+            backdrop-filter: none !important;
+            background-color: none !important;
+        }
+
         #chapterNav {
             position: relative;
             flex-direction: column;
-            height: 0px;
-            margin-bottom: 30px;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+
+            transform: translateY(140%);
+
+            margin-top: 20%;
         }
 
         main {
