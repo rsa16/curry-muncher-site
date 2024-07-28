@@ -42,7 +42,7 @@ const title = story.content.component === "Chapter" ?
         story.content.name;
 
 const desc = story.content.component === "Chapter" ?
-    `Volume ${story.content.volumeNumber}\n` + (story.content.content.content[0].content.map((obj) => obj.text).join('') + ' ' +
+    `Volume ${story.content.volumeNumber}:\n` + (story.content.content.content[0].content.map((obj) => obj.text).join('') + ' ' +
     story.content.content.content[1].content.map((obj) => obj.text).join('') + ' ' + 
     story.content.content.content[2].content.map((obj) => obj.text).join(''))
         .split(' ').slice(0, 35).join(' ') + '...' :
@@ -54,7 +54,7 @@ const desc = story.content.component === "Chapter" ?
     desc={desc}
     image={story.content.component === "Chapter" ? 
         story.content.novel.content.coverImage.filename : 
-        story.content.coverImage.url
+        story.content.coverImage.filename
     }
     type={{ 
         name: "article",
