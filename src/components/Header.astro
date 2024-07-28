@@ -1,0 +1,107 @@
+---
+---
+
+<nav class="header">
+    <a class="logo" href="/">
+        <h1>Curry Muncher <span>TLs</span></h1>
+    </a>
+    <div class="rightSide">
+        <a href="https://discord.com/invite/SzfCeGfMN6">Discord</a>
+    </div>
+</nav>
+
+<style>
+    .logo {
+        margin-left: 70px;
+    }
+
+    .rightSide {
+        display: flex;
+        flex-grow: 1;
+        justify-content: flex-end;
+        margin-right: 10%;
+    }
+
+    .rightSide a {
+        font-family: 'Kurale', sans-serif;
+        font-size: 20px;
+    }
+
+    .block {
+        top: 0px !important;
+        background-color: rgba(131, 47, 47, 0.7);
+        backdrop-filter: blur(5px);
+    }
+
+    .block h1 {
+        margin-left: 0 !important;
+    }
+
+    a {
+        all: unset;
+        cursor: pointer;
+        transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+        transition-delay: 100ms;
+    }
+
+    a:hover {
+        filter: brightness(70%);
+    }
+    .header {
+        position: fixed;
+        display: flex;
+        min-width: 100%;
+        top: 20px;
+        height: 7vw;
+
+        align-items: center;
+        justify-content: center;
+
+        color: #ffe2b2;
+
+        transition: all 300ms ease;
+
+        z-index: 10;
+    }
+
+    .header h1 {
+        margin: 0;
+        margin-left: 50px;
+        font-size: 2.93vw;
+        font-family: 'Alex Brush', sans-serif;
+        user-select: none;
+        transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .header h1 > span {
+        font-family: 'Kurale', serif;
+        font-size: 32px;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .header {
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+
+            height: 8%;
+        }
+    }
+</style>
+
+<script>
+    window.addEventListener("scroll", () => {
+        let nav = document.querySelector("nav.header");
+        if (window.scrollY > 50) {
+            nav?.classList.add("block");
+        } else {
+            nav?.classList.remove("block");
+        }
+    })
+</script>

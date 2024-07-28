@@ -1,0 +1,123 @@
+---
+const { volumes, currentChapter, currentVolume } = Astro.props;
+
+const nextChapter= volumes[currentVolume][currentChapter + 1];
+const prevChapter = volumes[currentVolume][currentChapter - 1];
+---
+
+<div>
+    <div id="selects">
+        <select id="volumes">
+            {Object.keys(volumes).map((volumeName, index) => {
+                return (index + 1) === Number(currentVolume) ? 
+                    <option selected value={volumeName}>{volumeName}</option> :
+                    <option value={volumeName}>{volumeName}</option> 
+            })}
+        </select>
+        <chapter-select data-volumes={JSON.stringify(volumes)}>
+            <select id="chapters">
+                {volumes[currentVolume].map(({ name, slug }) => {
+                    let chapterIndex = volumes[currentVolume].findIndex((chapter) => chapter.name === name);
+                    return chapterIndex === currentChapter ? 
+                        <option selected value={slug}>{name}</option> : 
+                        <option value={slug}>{name}</option>
+                    })}
+            </select>
+        </chapter-select>
+        
+    </div>
+
+    {prevChapter !== undefined && <a href={prevChapter.slug + '/'}>←</a>}
+    {nextChapter !== undefined && <a href={nextChapter.slug + '/'}>→</a> }
+</div>
+
+<style>
+    div {
+        display: flex;
+
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    #selects {
+        position: absolute;
+
+        display: flex;
+        left: 25px;
+    }
+
+    #chapters {
+        width: 100% !important;
+    }
+
+    #volumes, #chapters {
+        width: 30%;
+        height: 30px;
+
+        margin: 0 5px;
+    }
+
+    a {
+        position: relative;
+
+        all: unset;
+        width: 60px;
+        font-size: 45px;
+        margin: 10px;
+
+        color: white;
+        cursor: pointer;
+
+        transition: all 300ms ease;
+    }
+
+    a:hover {
+        color: rgb(146, 39, 12);
+    }
+
+    @media only screen and (max-width: 768px) { 
+        div {
+            flex-direction: column;
+        }
+
+        a {}
+    }
+</style>
+
+<script>
+    class ChapterSelect extends HTMLElement {
+        constructor() {
+            super();
+
+            const volumes = JSON.parse(this.dataset.volumes);
+            const volumeSelect = document.querySelector("select#volumes");
+
+            this.select = this.querySelector("select");
+            this.currentVolume = volumes[volumeSelect.value];
+
+            volumeSelect?.addEventListener("change", (event) => {
+                this.currentVolume = volumes[event.target.value];
+                this.generateSelectValues();
+            })
+
+            this.select.addEventListener("change", (event) => {
+                window.location.href = event.target.value;
+            })
+        }
+
+        generateSelectValues() {
+            this.select.options.length = 0;
+
+            for (const { name, slug } of this.currentVolume) {
+                let option = document.createElement("option");
+                
+                option.value = slug;
+                option.text = name;
+
+                this.select.add(option);
+            }
+        }
+    }
+
+    customElements.define('chapter-select', ChapterSelect)
+</script>

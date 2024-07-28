@@ -1,0 +1,43 @@
+---
+import { useStoryblokApi } from '@storyblok/astro'
+import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro'
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths()  {
+    const storyblokApi = useStoryblokApi();
+
+    const { data } = await storyblokApi.get("cdn/stories", {
+        content_type: "Novel",
+        version: 'published'
+    });
+
+    let staticPaths = [];
+    const novelSlugs = Object.values(data.stories).map((novel) => novel.slug);
+    staticPaths.push(...novelSlugs.map((slug) => ({ params: { name: slug, slug: undefined}})));
+
+    for (const novelSlug of novelSlugs) {
+        const chapters = await storyblokApi.getAll("cdn/stories", {
+            content_type: "Chapter",
+            version: 'published'
+        });
+
+        staticPaths.push(...chapters.map((chapter) => ({ params: { name: novelSlug, slug: chapter.slug }})));
+    }
+
+    return staticPaths;
+}
+
+const { name, slug } = Astro.params;
+const storyblokApi = useStoryblokApi();
+
+const { data } = await storyblokApi.get(`cdn/stories/novels/${name}${slug !== undefined ? '/' + slug : ''}`, {
+    version: 'published',
+    resolve_relations: ["Chapter.novel"]
+});
+
+const story = data.story;
+---
+
+<BaseLayout>
+    <StoryblokComponent transition:animate="fade" slug={story.slug} blok={story.content} />
+</BaseLayout>

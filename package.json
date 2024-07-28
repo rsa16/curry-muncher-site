@@ -1,0 +1,25 @@
+{
+  "name": "curry-muncher-site",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/montserrat": "^5.0.19",
+    "@fontsource-variable/raleway": "^5.0.20",
+    "@fontsource/alex-brush": "^5.0.20",
+    "@fontsource/kaushan-script": "^5.0.21",
+    "@fontsource/kurale": "^5.0.14",
+    "@storyblok/astro": "^5.0.0",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "astro": "^4.12.2",
+    "sharp": "^0.33.4",
+    "vite": "^5.3.5"
+  },
+  "packageManager": "yarn@4.3.1"
+}

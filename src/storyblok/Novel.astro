@@ -1,0 +1,179 @@
+---
+import { storyblokEditable, useStoryblokApi } from '@storyblok/astro'
+import { Image } from 'astro:assets';
+
+const storyblokApi = useStoryblokApi();
+
+const { blok, slug } = Astro.props;
+const data = await storyblokApi.getAll(`cdn/stories`, {
+    content_type: "Chapter",
+    starts_with: `novels/${slug}`,
+    version: "published",
+    sort_by: "content.postDate:asc"
+});
+
+let volumes = {};
+for (let i = 1; i <= Number(blok.volumes); i++) {
+    let chapters = data.filter((chapter) => Number(chapter.content.volumeNumber) === i);
+    volumes[`Volume ${i}`] = (chapters.map((chapter) => {
+        return { 
+            name: `${chapter.content.displayName}: ${chapter.content.chapterTitle}`,
+            slug: '/' + chapter.full_slug + '/'
+        }
+    }))
+}
+
+const firstHref = volumes["Volume 1"][0].slug;
+const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volumes}`].length - 1].slug;
+---
+
+<div class="container">
+    <header>
+        <div class="main">
+            <Image src={blok.coverImage.filename} width=599 height=844 alt={`Cover illustration for ${blok.name}`} />
+            <div class="info">
+                <p><span class="status">{blok.status}</span> &nbsp;•&nbsp; {blok.volumes} Volume(s) </p>
+                <h1>{blok.name}</h1>
+                <p class="creators">
+                    <span><b>Author:</b> {blok.author}</span>
+                    <span><b>Illustrator:</b> {blok.illustrator}</span>
+                </p>
+                <p class="synposis">{blok.synopsis}</p>
+                <div class="btnRow">
+                    <a href={firstHref}>Read First</a>
+                    <a href={lastHref}>Read Last</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+    </main>
+</div>
+
+<style>
+    .btnRow {
+        margin-top: 25px;
+        width: 100%;
+    }
+
+    .btnRow a {
+        border: none;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #ffe2b2;
+        background-color: rgba(213, 75, 75, 0.7);
+        padding: 15px 35px;
+        font-family: 'Montseratt Variable', sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 18px;
+        width: 30%;
+        height: 50px;
+        transition: all 300ms ease;
+        cursor: pointer;
+        margin-right: 15px;
+    }
+
+    .btnRow a:hover {
+        filter: brightness(70%);
+    }
+
+    .synposis {
+        padding-top: 10px;
+        width: 100%;
+        text-align: justify;
+    }
+    .status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: #544835;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .creators {
+        display: flex;
+        width: 50% !important;
+        justify-content: space-between;
+    }
+
+    .creators span {
+        width: 40%;
+    }
+
+    .info p {
+        margin: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .info h1 {
+        margin: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-left: 3%;
+        margin-right: 0;
+        padding-right: 0;
+        font-size: 20px;
+        font-family: 'Raleway Variable', sans-serif;
+        color: #ffe2b2;
+
+        width: 40%;
+        height: 100%;
+    }
+
+    .main {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+
+        width: 100%;
+        top: 15%;
+    }
+
+    .main > img {
+        width: auto;
+        height: 70%;
+        border-radius: 25px;
+        box-shadow: 4px 4px 67px 0px rgba(104,169,230,0.7);
+        transition: all 300ms ease;
+    }
+
+    .main > img:hover {
+        transform: rotateX(-15deg) rotateZ(-5deg);
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    .container header {
+        display: flex;
+        width: 100%;
+        height: 70vh;
+
+        padding-top: 4%;
+
+        background-color: rgba(73, 9, 9, 0.3);
+		backdrop-filter: blur(125px);
+
+        justify-content: flex-start;
+    }
+
+    main {
+        display: flex;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(213, 75, 75, 0.7);
+    }
+</style>

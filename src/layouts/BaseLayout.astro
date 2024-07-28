@@ -1,0 +1,65 @@
+---
+import '@fontsource/alex-brush';
+import '@fontsource/kaushan-script'
+import '@fontsource-variable/raleway';
+import '@fontsource-variable/montserrat'
+import '@fontsource/kurale';
+
+import CommonHead from "../components/CommonHead.astro";
+import Header from "../components/Header.astro"
+
+const { title, desc } = Astro.props;
+---
+
+<html transition:animate="none">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1">
+        <CommonHead title={title} description={desc}/>
+    </head>
+
+    <body transition:animate="none">
+        <Header transition:animate="none"/>
+
+        <video id="gradient-bg" autoplay loop muted playsinline transition:animate="none" transition:name="media-player" transition:persist poster="/preload_bg.png">
+            <source src="/video/gradient_bg.mp4" type="video/mp4"/>
+        </video>
+        <div transition:animate="none" transition:name="gradient-player" transition:persist id="gradient-overlay"></div>
+
+        <slot/>
+    </body>
+
+    <style>
+        body {
+            margin: 0;
+            background: transparent;
+        }
+    
+        #gradient-bg {
+            position: fixed;
+            left: 0;
+            top: 0;
+            min-width: 100%;
+            height: 100%;
+            z-index: -3;
+            object-fit: cover;
+        }
+
+        #gradient-overlay {
+            position: fixed ;
+            left: 0;
+            top: 0;
+            min-width: 100%;
+            height: 100vh;
+            background-color: rgba(73, 9, 9, 0.3);
+            background-image: initial;
+            z-index: -2;
+        }
+
+        @media only screen and (max-width: 768px) {
+            body, html {
+                overflow-x: hidden;
+            }
+        }
+    </style>
+</html>

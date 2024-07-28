@@ -1,0 +1,211 @@
+---
+import { storyblokEditable, renderRichText, useStoryblokApi } from '@storyblok/astro'
+import ChapterNavigation from '../components/ChapterNavigation.astro';
+
+const storyblokApi = useStoryblokApi();
+
+const { blok } = Astro.props
+const data = await storyblokApi.getAll(`cdn/stories`, {
+    content_type: "Chapter",
+    starts_with: `novels/${blok.novel.slug}`,
+    version: "published",
+    sort_by: "content.postDate:asc"
+});
+
+let volumes = {};
+for (let i = 1; i <= Number(blok.novel.content.volumes); i++) {
+    let chapters = data.filter((chapter) => Number(chapter.content.volumeNumber) === i);
+    volumes[`Volume ${i}`] = (chapters.map((chapter) => {
+        return { 
+            name: `${chapter.content.displayName}: ${chapter.content.chapterTitle}`,
+            slug: '/' + chapter.full_slug + '/'
+        }
+    }))
+}
+
+const renderedRichText = renderRichText(blok.content);
+const currentVolume = `Volume ${blok.volumeNumber}`;
+const currentChapter = volumes[currentVolume].findIndex((chapter) => {
+    return chapter.name === `${blok.displayName}: ${blok.chapterTitle}`;
+});
+
+---
+
+<div class="container">
+    <div id="chapterNav">
+        <ChapterNavigation currentChapter={currentChapter} currentVolume={currentVolume} volumes={volumes} />
+    </div>
+
+    <main class="transparent">
+        <article {...storyblokEditable(blok)}>
+            <h2 class="novelName"><a href={'/' + blok.novel.full_slug}>{blok.novel.name}</a> - <span>{currentVolume}</span></h2>
+            <h2>{blok.displayName}</h2>
+            <h1>{blok.chapterTitle}</h1>
+            <h3>{blok.postDate}</h3>
+            <hr>
+            <div set:html={renderedRichText}></div>
+        </article>
+        <div class="btmStuff">
+            <ChapterNavigation currentChapter={currentChapter} currentVolume={currentVolume} volumes={volumes} />
+        </div>
+    </main>
+    <div class="spacer">
+    </div>
+</div>
+
+
+<style>
+    a {
+        all: unset;
+        font-style: italic;
+        cursor: pointer;
+        transition: all 300ms ease;
+        color: #ffd694;
+
+    }
+    a:hover {
+        filter: brightness(70%);
+    }
+
+    #chapterNav {
+        position: relative;
+        width: 78%;
+        margin: 0px 10%;
+        padding: 10px 25px;
+        top: 7vw;
+        z-index: 3;
+
+        height: 30px;
+    }
+
+    .btmStuff {
+        display: flex;
+
+        justify-content: flex-end;
+        align-items: center;
+
+        position: absolute;
+        height: 10vh;
+        width: 100%;
+
+        left: 0;
+        bottom: 0;
+        margin: 0;
+
+        transform: translate(0%, 100%);
+
+        z-index: -1;
+    }
+
+    hr {
+        width: 100%;
+    }
+
+    .container {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+    }
+    h1 {
+        margin: 0;
+    }
+
+    h2:has(+h1) {
+        font-weight: 400;
+        margin: 0;
+        margin-top: 25px;
+    }
+
+    .novelName {
+        font-weight: 300;
+        margin-bottom: 0.5em;
+        text-align: center;
+    }
+
+    .spacer {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        height: 1vh;
+    }
+
+    .transparent {
+        background-color: rgba(73, 9, 9, 0.3);
+		backdrop-filter: blur(125px);
+    }
+    main {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        margin: 0px 10%;
+
+        margin-top: 10%;
+
+        border-radius: 20px;
+
+        padding: 10px 25px;
+
+        font-family: 'Montserrat Variable', sans-serif;
+    }
+
+    hr {
+        color: white;
+    }
+
+    h1 {
+        font-size: 45px;
+    }
+
+    article {
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+
+    article > div {
+        font-size: 22px;
+    }
+
+    @media only screen and (max-width: 768px) { 
+
+        #chapterNav {
+            position: relative;
+            flex-direction: column;
+            height: 0px;
+            margin-bottom: 30px;
+        }
+
+        main {
+            padding-top: 20vw;
+            margin: 0;            
+            border-radius: 0;
+        }
+        h1 {
+            font-size: 35px;
+            line-height: 1.15em;
+        }
+
+        h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        article > div {
+            font-size: 18px;
+        }
+
+        .spacer {
+            display: none;
+            height: 0;
+        }
+
+        .btmStuff {
+            position: relative;
+            transform: none;
+        }
+    }
+</style>
