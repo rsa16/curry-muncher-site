@@ -8,7 +8,7 @@ import '@fontsource/kurale';
 import CommonHead from "../components/CommonHead.astro";
 import Header from "../components/Header.astro"
 
-const { title, desc, image = "", type = { name: "website", properties: null } } = Astro.props;
+const { title, desc, large_image = false, image = "", type = { name: "website", properties: null } } = Astro.props;
 
 const url = `https://currymunchertls.rsaaa.xyz${Astro.url.pathname}`;
 ---
@@ -23,6 +23,7 @@ const url = `https://currymunchertls.rsaaa.xyz${Astro.url.pathname}`;
             title={title} 
             description={desc} 
             image={image}
+            large_image={true}
             type={type}
         />
     </head>

@@ -1,6 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-const { title, description, image, type } = Astro.props;
+const { title, description, image, type, large_image } = Astro.props;
 ---
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
@@ -17,10 +17,13 @@ const { title, description, image, type } = Astro.props;
 <meta property="og:locale" content="en_US"/>
 <meta property="og:description" content={description} />
 <meta property="og:type" content={type.name}/>
+{ large_image && <meta name="twitter:card" content="summary_large_image"/> }
 
 {type.name === 'article' && 
     <meta property="og:article:section" content={type.properties.section}/>
     <meta property="og:article:published_time" content={type.properties.published_time}/>
 }
+
+
 
 <ViewTransitions/>
