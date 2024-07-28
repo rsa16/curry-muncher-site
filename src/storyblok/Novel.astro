@@ -34,6 +34,7 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
             <div class="info">
                 <p><span class="status">{blok.status}</span> &nbsp;•&nbsp; {blok.volumes} Volume(s) </p>
                 <h1>{blok.name}</h1>
+                <span><b>Raws:</b> <a href={blok.raws.url}>Linked Here</a></span>
                 <p class="creators">
                     <span><b>Author:</b> {blok.author}</span>
                     <span><b>Illustrator:</b> {blok.illustrator}</span>
@@ -51,6 +52,9 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
 </div>
 
 <style>
+    .info span {
+        margin-top: 10px;
+    }
     .btnRow {
         margin-top: 25px;
         width: 100%;
