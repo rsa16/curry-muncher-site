@@ -133,7 +133,7 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
     }
 
     .transparent {
-        background-color: initial;
+        background-color: rgba(73, 9, 9, 0.3);
 		backdrop-filter: blur(125px);
     }
     main {
@@ -172,12 +172,17 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
 
     @media only screen and (max-width: 768px) { 
 
+        .mobileTransparent {
+            background-color: rgba(73, 9, 9, 0.3);
+		    backdrop-filter: blur(125px);
+        }
+
         .novelName {
             transform: translateY(-200%);
         }
         .transparent {
-            backdrop-filter: none !important;
-            background-color: none !important;
+            backdrop-filter: none;
+            background-color: initial;
         }
 
         #chapterNav {
