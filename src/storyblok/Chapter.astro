@@ -43,7 +43,7 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
             <h1>{blok.chapterTitle}</h1>
             <h3>{blok.postDate}</h3>
             <hr>
-            <div set:html={renderedRichText}></div>
+            <div class="content" set:html={renderedRichText}></div>
         </article>
         <div class="btmStuff">
             <ChapterNavigation currentChapter={currentChapter} currentVolume={currentVolume} volumes={volumes} />
@@ -51,8 +51,58 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
     </main>
     <div class="spacer">
     </div>
+
+    <script src="https://giscus.app/client.js"
+        data-repo="rsa16/curry-muncher-site"
+        data-repo-id="R_kgDOMcBIrw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOMcBIr84Ch7SM"
+        data-mapping="pathname"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+    </script>
 </div>
 
+<style is:global>
+.content img {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.giscus {
+    display: flex;
+    justify-content: center;
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+
+.giscus-frame gsc-comment-box {
+    border-radius: 10% !important;
+}
+
+.giscus-frame {
+    width: 75%;
+}
+
+.text-center {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+* {
+    scroll-margin-top: 150px;
+}
+
+</style>
 
 <style>
     a {
@@ -166,7 +216,7 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
         color: white;
     }
 
-    article > div {
+    .content {
         font-size: 22px;
     }
 
