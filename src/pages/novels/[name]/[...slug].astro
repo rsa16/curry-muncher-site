@@ -43,8 +43,8 @@ const title = story.content.component === "Chapter" ?
 
 const desc = story.content.component === "Chapter" ?
     `Volume ${story.content.volumeNumber}:\n` + (story.content.content.content[0].content.map((obj) => obj.text).join('') + ' ' +
-    story.content.content.content[1].content.map((obj) => obj.text).join('') + ' ' + 
-    story.content.content.content[2].content.map((obj) => obj.text).join(''))
+    story.content.content.content[3].content.map((obj) => obj.text).join('') + ' ' + 
+    story.content.content.content[4].content.map((obj) => obj.text).join(''))
         .split(' ').slice(0, 35).join(' ') + '...' :
     story.content.synopsis;
 ---
