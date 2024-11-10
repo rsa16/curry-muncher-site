@@ -52,7 +52,9 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
     <div class="spacer">
     </div>
 
-    <script src="https://giscus.app/client.js"
+    <script
+        is:inline
+        src="https://giscus.app/client.js"
         data-repo="rsa16/curry-muncher-site"
         data-repo-id="R_kgDOMcBIrw"
         data-category="Announcements"
@@ -64,8 +66,10 @@ const currentChapter = volumes[currentVolume].findIndex((chapter) => {
         data-input-position="top"
         data-theme="preferred_color_scheme"
         data-lang="en"
-        crossorigin="anonymous">
-    </script>
+	    data-loading="lazy"
+        crossorigin="anonymous"
+        async
+    ></script>
 </div>
 
 <style is:global>
