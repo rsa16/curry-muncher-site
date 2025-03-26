@@ -27,8 +27,8 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
         
     </div>
 
-    {prevChapter !== undefined && <a href={prevChapter.slug + '/'}>←</a>}
-    {nextChapter !== undefined && <a href={nextChapter.slug + '/'}>→</a> }
+    {prevChapter !== undefined && <a href={prevChapter.slug}>←</a>}
+    {nextChapter !== undefined && <a href={nextChapter.slug}>→</a> }
 </div>
 
 <style>
