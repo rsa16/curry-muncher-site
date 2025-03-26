@@ -48,7 +48,6 @@ try {
         story.content.content.content[4].content.map((obj) => obj.text).join(''))
             .split(' ').slice(0, 35).join(' ') + '...' :
         story.content.synopsis;
-    }
 } catch {
     const desc = story.content.content.content[0].content.map((obj) => obj.text).join('')).split(' ').slice(0, 35).join(' ') + '...';
 }
