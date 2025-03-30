@@ -136,12 +136,12 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
             this.currentVolume = volumes[volumeSelect.value];
 
             volumeSelect?.addEventListener("change", (event) => {
-                this.currentVolume = volumes[event.target.value];
+                this.currentVolume = volumes[(event.target as HTMLSelectElement).value];
                 this.generateSelectValues();
             })
 
             this.select?.addEventListener("change", (event) => {
-                let url = event.target.value;
+                let url = (event.target as HTMLSelectElement).value;
                 window.location.href = url;
             })
         }
