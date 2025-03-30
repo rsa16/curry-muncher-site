@@ -4,7 +4,6 @@ const { volumes, currentChapter, currentVolume } = Astro.props;
 const nextChapter= volumes[currentVolume][currentChapter + 1];
 const prevChapter = volumes[currentVolume][currentChapter - 1];
 ---
-
 <div>
     <div id="selects">
         <select id="volumes">
@@ -27,8 +26,8 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
         
     </div>
 
-    {prevChapter !== undefined && <a href={prevChapter.slug}>←</a>}
-    {nextChapter !== undefined && <a href={nextChapter.slug}>→</a> }
+    {prevChapter !== undefined && <a id="prevC" data-currChap={currentChapter} href={prevChapter.slug}>←</a>}
+    {nextChapter !== undefined && <a id="nextC" data-currChap={currentChapter} href={nextChapter.slug}>→</a> }
 </div>
 
 <style>
@@ -106,14 +105,34 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
 </style>
 
 <script>
+    document.addEventListener('astro:after-swap', () => {
+        function sendMessage<T>(message: T) {
+            const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+            if (!iframe?.contentWindow) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        
+        setTimeout(() => {
+            sendMessage({
+                setConfig: {
+                    term: window.location.pathname.substr(1)
+                }
+            })
+        }, 1000)
+    });
+
     class ChapterSelect extends HTMLElement {
+        dataset: DOMStringMap;
+        select: HTMLSelectElement;
+        currentVolume: any;
+
         constructor() {
             super();
 
-            const volumes = JSON.parse(this.dataset.volumes);
-            const volumeSelect = document.querySelector("select#volumes");
+            const volumeSelect: HTMLSelectElement = document.querySelector("select#volumes")!;
 
-            this.select = this.querySelector("select");
+            let volumes = JSON.parse(this.getAttribute("data-volumes")!);
+            this.select = this.querySelector("select")!;
             this.currentVolume = volumes[volumeSelect.value];
 
             volumeSelect?.addEventListener("change", (event) => {
@@ -121,8 +140,9 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
                 this.generateSelectValues();
             })
 
-            this.select.addEventListener("change", (event) => {
-                window.location.href = event.target.value;
+            this.select?.addEventListener("change", (event) => {
+                let url = event.target.value;
+                window.location.href = url;
             })
         }
 
