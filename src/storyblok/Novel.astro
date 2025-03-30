@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 const storyblokApi = useStoryblokApi();
 
 const { blok, slug } = Astro.props;
+
 const data = await storyblokApi.getAll(`cdn/stories`, {
     content_type: "Chapter",
     starts_with: `novels/${slug}`,
@@ -12,7 +13,12 @@ const data = await storyblokApi.getAll(`cdn/stories`, {
     sort_by: "content.postDate:asc"
 });
 
-let volumes = {};
+interface Chapter {
+    name: string
+    slug: string
+}
+
+const volumes = {};
 for (let i = 1; i <= Number(blok.volumes); i++) {
     let chapters = data.filter((chapter) => Number(chapter.content.volumeNumber) === i);
     volumes[`Volume ${i}`] = (chapters.map((chapter) => {
@@ -22,6 +28,12 @@ for (let i = 1; i <= Number(blok.volumes); i++) {
         }
     }))
 }
+
+const epubLinks = Object.fromEntries(
+    blok.epubs.tbody.map((row) => 
+        [row.body[0].value, row.body[1].value]
+    )
+)
 
 const firstHref = volumes["Volume 1"][0].slug;
 const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volumes}`].length - 1].slug;
@@ -48,10 +60,50 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
         </div>
     </header>
     <main>
+        <h1>Chapters</h1>
+        <span id="chapterContent">
+            {Object.entries(volumes).map(([volumeNumber, volume]) => {
+                return (
+                    <div class="vol">
+                        <h4> {volumeNumber} </h4>
+                        <span> <a href={epubLinks[volumeNumber]}>EPUBs/PDFs</a> </span>
+                        {(volume as Chapter[]).map((chapter) => <a href={chapter.slug}>{chapter.name}</a>)}
+                    </div>
+                )
+            })}
+        </span>
     </main>
 </div>
 
 <style>
+    #chapterContent {
+        width: 40%;
+    }
+    .vol {
+        display: flex;
+        flex-direction: column;
+        font-size: x-large;
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        border-radius: 15px;
+    }
+
+    .vol span {
+        font-size: small;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    h4 {
+        text-align: center;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    h3 {
+        margin-bottom: 10px;
+    }
+
     .info span {
         margin-top: 10px;
     }
@@ -175,11 +227,29 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
     }
 
     main {
+        justify-content: center;
+        align-items: center;
+
+        padding: 60px 0;
         display: flex;
+        flex-direction: column;
         flex: 1;
         width: 100%;
         height: 100%;
         background-color: rgba(213, 75, 75, 0.7);
+        color: #ffe2b2;
+        font-family: 'Raleway Variable', sans-serif;
+    }
+
+    .vol a {
+        all: unset;
+        cursor: pointer;
+        transition: 300ms ease all;
+        padding: 10px 0;
+    }
+
+    .vol a:hover {
+        filter: brightness(70%);
     }
 
     @media only screen and (max-width: 768px) { 
@@ -216,6 +286,11 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
 
         main {
             height: 100%;
+        }
+
+        #chapterContent {
+            width: unset;
+            margin: 15px;
         }
     }
 </style>
