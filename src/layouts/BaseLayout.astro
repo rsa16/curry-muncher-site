@@ -92,8 +92,10 @@ const url = `https://currymunchertls.rsaaa.xyz${Astro.url.pathname}`;
     });
 
     document.addEventListener('astro:page-load', () => {
-        let giscus_comments = document.querySelector(".giscus_comments")
-        if (!giscus_comments) return;
+        const giscus_comments = document.querySelector(".giscus_comments")
+        const iframe = document.querySelector('iframe.giscus-frame');
+
+        if (iframe || !giscus_comments) return;
 
         let giscusAttributes = {
             "src": "https://giscus.app/client.js",
