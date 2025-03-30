@@ -73,21 +73,3 @@ const url = `https://currymunchertls.rsaaa.xyz${Astro.url.pathname}`;
         }
     </style>
 </html>
-
-<script>
-    document.addEventListener('astro:after-swap', () => {
-        function sendMessage<T>(message: T) {
-            const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
-            if (!iframe?.contentWindow) return;
-            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-        }
-        
-        setTimeout(() => {
-            sendMessage({
-                setConfig: {
-                    term: window.location.pathname.substr(1)
-                }
-            })
-        }, 1000)
-    });
-</script>
