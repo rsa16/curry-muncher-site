@@ -1,217 +1,269 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { Image } from 'astro:assets';
-import dateThisSuperCuteMe from '../images/date-this-super-cute-me/cover.png';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+import dateThisSuperCuteMe from "../images/date-this-super-cute-me/cover.png";
+import aloneInPajamas from "../images/alone-in-pajamas/cover.jpg";
 ---
 
-<BaseLayout 
-	title="Curry Munchers - Home" 
-	desc="Welcome to Curry Muncher Translations! Our main translator is rsa16, \
-	and we are currently translating 'Date This Super Cute Me' from volume 1."
+<BaseLayout
+    title="Curry Munchers - Home"
+    desc="Welcome to Curry Muncher Translations! Our main translator is rsa16, \
+    and we are currently translating 'Date This Super Cute Me' from volume 1."
 >
-	<main transition:animate="fade">
-		<header class="container">
-			<div id="hero">
-				<div class="title">
-					<h1 id="mainTitle">Curry Muncher</h1>
-					<h1 id="secondaryTitle">Translations</h1>
-				</div>
-				<p id="desc">
-					<b>Main Translator:</b> rsa16
-					<br/><br/>
-					Oh and this guy named bachi helps me edit sometimes
-				</p>
-			</div>
-		</header>
-		<div class="novels">
-			<div class="book">
-				<a href="/novels/date-this-super-cute-me/">
-					<Image src={dateThisSuperCuteMe} alt="The cover for Date This Super Cute Me"></Image>
-					<p>Date This Super Cute Me!</p>
-				</a>
-			</div>
-		</div>
-	</main>
+    <main transition:animate="fade">
+        <header class="container">
+            <div id="hero">
+                <div class="title">
+                    <h1 id="mainTitle">Curry Muncher</h1>
+                    <h1 id="secondaryTitle">Translations</h1>
+                </div>
+                <p id="desc">
+                    <b>Main Translator:</b> rsa16
+                    <br /><br />
+                    Oh and this guy named bachi helps me edit sometimes
+                </p>
+            </div>
+        </header>
+        <div class="novels">
+            <div class="book">
+                <a href="/novels/date-this-super-cute-me/">
+                    <Image
+                        src={dateThisSuperCuteMe}
+                        alt="The cover for Date This Super Cute Me"
+                    />
+                </a>
+                <p>Date This Super Cute Me!</p>
+            </div>
+
+            <div class="book">
+                <a href="/novels/alone-in-pajamas/">
+                    <Image
+                        src={aloneInPajamas}
+                        alt="The cover for Alone in a Room With a Beautiful Girl in Defenseless Cute Pajamas"
+                    />
+                </a>
+                <p>Alone in a Room With a Beautiful Girl in Defenseless Cute Pajamas</p>
+            </div>
+        </div>
+    </main>
 </BaseLayout>
 
 <style>
-	main {
-		display: flex;
-	}
+    main {
+        display: flex;
+    }
 
-	.novels {
-		display: flex;
-		flex-direction: column;
+    .novels {
+        display: flex;
+        flex-direction: column;
 
-		justify-content: center;
-		align-items: center;
-	
-		width: 50%;
-		height: 100vh;
-	}
+        align-items: flex-end;
 
-	.book > a p {
-		display: inline-block;
-  		position: relative;
-		font-family: 'Kurale', serif;
-		font-size: 25px;
-		transition: all 300ms ease;
-	}
+        width: 50%;
+        height: 100vh;
 
-	.book > a p::after {
-		content: '';
-		position: absolute;
-		width: 100%;
-		transform: scaleX(0);
-		height: 2px;
-		bottom: 0;
-		left: 0;
-		background-color: #436fb2;
-		transform-origin: bottom right;
-		transition: transform 0.25s ease-out;
-	}
+        position: fixed;
+        right: 0;
+        overflow-y: scroll;
+    }
 
-	a {
-		all: unset;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+    .book > p {
+        display: inline-block;
+        position: relative;
+        font-family: "Kurale", serif;
+        font-size: 25px;
+        transition: all 300ms ease;
 
-	.book > a > img {
-		width: 47%;
-		height: auto;
-		border-radius: 15px;
-		box-shadow: 4px 4px 60px 10px rgba(51, 83, 133, 1);
-	}
+        max-width: 40%;
+        text-align: center;
+    }
 
-	.book {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+    .book > p::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #436fb2;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
 
-	.book > a > img {
-		transition: all 300ms ease;
-		cursor: pointer;
-	}
+    a {
+        all: unset;
+    }
 
-	.book > a > img:hover {
-		filter: brightness(70%);
-		box-shadow: 4px 4px 40px 10px rgb(51, 83, 133);
-	}
+    .book > a > img {
+        width: 25vw;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 4px 4px 60px 10px rgba(51, 83, 133, 1);
+    }
 
-	.book > a > img:hover + p {
-		color: #20375b;
-	}
+    .book {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 25%;
+    }
 
-	.book > a > img:hover + p::after {
-		transform: scaleX(1);
-		transform-origin: bottom left;
-	}
+    .book > a > img {
+        transition: all 300ms ease;
+        cursor: pointer;
+    }
 
-	#hero {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		margin-top: 5%;
-		margin-right: 10%;
-	}
+    .book > a > img:hover {
+        filter: brightness(70%);
+        box-shadow: 4px 4px 40px 10px rgb(51, 83, 133);
+    }
 
-	#desc {
-		color: #381f0b;
-		font-family: 'Kurale', serif;
-		font-size: 20px;
-		width: 60%;
+    .book > a:hover + p {
+        color: #20375b;
+    }
 
-		margin: 0;
-		margin-top: 5px;
-		margin-right: 5px;
+    .book > a:hover + p::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
 
-		line-height: 1.2em;
-		text-wrap: wrap;
-		text-align: right;
-	}
+    #hero {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-top: 5%;
+        margin-right: 10%;
+    }
 
-	.container {
-		display: flex;
-		flex-direction: column;
+    #desc {
+        color: #381f0b;
+        font-family: "Kurale", serif;
+        font-size: 20px;
+        width: 60%;
 
-		width: 50%;
-		height: 100vh;
+        margin: 0;
+        margin-top: 5px;
+        margin-right: 5px;
 
-		justify-content: center;
-		align-items: flex-end;
-		
-		background-color: rgba(73, 9, 9, 0.3);
-		backdrop-filter: blur(125px);
-		z-index: -1;
-	}
+        line-height: 1.2em;
+        text-wrap: wrap;
+        text-align: right;
+    }
 
-	h1 {
-		margin: 0;
-	}
+    .container {
+        display: flex;
+        flex-direction: column;
 
-	#mainTitle {
-		background: linear-gradient(to right, #f32170, #ff6b08,#cf23cf, #eedd44);
-		-webkit-text-fill-color: transparent;
-		-webkit-background-clip: text;
-		color: transparent;
+        width: 50%;
+        height: 100vh;
 
-		text-shadow: 4px 4px 20px rgba(255 ,0,0,0.5);
-		filter: drop-shadow(2px 2px 10px #732121);
-	}
+        justify-content: center;
+        align-items: flex-end;
 
-	#secondaryTitle {
-		color: #521b1b;
-	}
+        background-color: rgba(73, 9, 9, 0.3);
+        backdrop-filter: blur(125px);
+        z-index: -1;
 
-	.title {
-		position: relative;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0; */
+    }
 
-		text-align: right;
-		line-height: 2.2em;
-		font-family: 'Raleway Variable', sans-serif;
-		font-weight: 700;
-		font-size: 35px;
+    h1 {
+        margin: 0;
+    }
 
-		text-shadow: 4px 4px 20px rgba(0,0,0,0.3);
-		z-index: 3;
-	}
+    #mainTitle {
+        background: linear-gradient(
+            to right,
+            #f32170,
+            #ff6b08,
+            #cf23cf,
+            #eedd44
+        );
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+        color: transparent;
 
-	@media only screen and (max-width: 768px) {
-		main {
-			flex-direction: column;
-		}
+        text-shadow: 4px 4px 20px rgba(255, 0, 0, 0.5);
+        filter: drop-shadow(2px 2px 10px #732121);
+    }
 
-		.book > a > img {
-			width: 63%;
-		}
+    #secondaryTitle {
+        color: #521b1b;
+    }
 
-		.novels {
-			width: 100%;
-		}
-		.container {
-			width: 100%;
-			align-items: center;
-		}
+    .title {
+        position: relative;
 
-		#hero {
-			align-items: center;
-			margin-right: 0;
-		}
+        text-align: right;
+        line-height: 2.2em;
+        font-family: "Raleway Variable", sans-serif;
+        font-weight: 700;
+        font-size: 35px;
 
-		.title {
-			text-align: center;
-			font-size: 25px;
-			width: 90%;
-		}
+        text-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+        z-index: 3;
+    }
 
-		#desc {
-			margin-top: 15px;
-			text-align: center;
-		}
-	}
+    @media only screen and (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .book > a > img {
+            width: 63%;
+        }
+
+        .novels {
+            flex-direction: row;
+            width: 100%;
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .book {
+            width: 100vw;
+            margin-top: initial;
+        }
+
+        .container {
+            width: 100%;
+            align-items: center;
+        }
+
+        #hero {
+            align-items: center;
+            margin-right: 0;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 25px;
+            width: 90%;
+        }
+
+        #desc {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+        .novels {
+            flex-direction: column;
+        }
+    }
 </style>
