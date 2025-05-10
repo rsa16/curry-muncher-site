@@ -8,7 +8,7 @@ const prevChapter = volumes[currentVolume][currentChapter - 1];
     <div id="selects">
         <select id="volumes">
             {Object.keys(volumes).map((volumeName, index) => {
-                return (index + 1) === Number(currentVolume) ? 
+                return index === Number(currentVolume) ? 
                     <option selected value={volumeName}>{volumeName}</option> :
                     <option value={volumeName}>{volumeName}</option> 
             })}
