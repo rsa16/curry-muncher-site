@@ -35,8 +35,11 @@ const epubLinks = Object.fromEntries(
     )
 )
 
-const firstHref = volumes["Volume 1"][0].slug;
-const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volumes}`].length - 1].slug;
+const volEntries = Object.entries(volumes)
+
+console.log(volEntries)
+const firstHref = volEntries[0][1][0].slug;
+const lastHref = volEntries[volEntries.length - 1][1][volEntries[volEntries.length - 1][1].length - 1].slug;
 ---
 
 <div class="container">
@@ -183,7 +186,6 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
         color: #ffe2b2;
 
         width: 40%;
-        height: 100%;
     }
 
     .main {
@@ -194,11 +196,13 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
 
         width: 100%;
         top: 15%;
+        height: min-content;
+        padding: 50px 0;
     }
 
     .main > img {
         width: auto;
-        height: 70%;
+        height: 60vh;
         border-radius: 25px;
         box-shadow: 4px 4px 67px 0px rgba(104,169,230,0.7);
         transition: all 300ms ease;
@@ -217,9 +221,8 @@ const lastHref = volumes[`Volume ${blok.volumes}`][volumes[`Volume ${blok.volume
     .container header {
         display: flex;
         width: 100%;
-        height: 70vh;
 
-        padding-top: 4%;
+        padding-top: 6%;
 
         background-color: rgba(73, 9, 9, 0.3);
 		backdrop-filter: blur(125px);

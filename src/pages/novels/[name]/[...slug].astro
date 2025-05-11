@@ -19,11 +19,14 @@ export async function getStaticPaths()  {
     for (const novelSlug of novelSlugs) {
         const chapters = await storyblokApi.getAll("cdn/stories", {
             content_type: "Chapter",
+            starts_with: `novels/${novelSlug}`,
             version: 'published'
         });
 
         staticPaths.push(...chapters.map((chapter) => ({ params: { name: novelSlug, slug: chapter.slug }})));
     }
+
+    console.log(staticPaths)
 
     return staticPaths;
 }
@@ -35,6 +38,7 @@ const { data } = await storyblokApi.get(`cdn/stories/novels/${name}${slug !== un
     version: 'published',
     resolve_relations: ["Chapter.novel"]
 });
+
 
 const story = data.story;
 const title = story.content.component === "Chapter" ?
