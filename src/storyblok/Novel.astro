@@ -21,6 +21,7 @@ interface Chapter {
 const volumes = {};
 for (let i = 1; i <= Number(blok.volumes); i++) {
     let chapters = data.filter((chapter) => Number(chapter.content.volumeNumber) === i);
+    if (chapters.length === 0) { continue; }
     volumes[`Volume ${i}`] = (chapters.map((chapter) => {
         return { 
             name: `${chapter.content.displayName}: ${chapter.content.chapterTitle}`,

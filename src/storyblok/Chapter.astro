@@ -16,6 +16,7 @@ const data = await storyblokApi.getAll(`cdn/stories`, {
 let volumes = {};
 for (let i = 1; i <= Number(blok.novel.content.volumes); i++) {
     let chapters = data.filter((chapter) => Number(chapter.content.volumeNumber) === i);
+    if (!chapters) { continue; }
     volumes[`Volume ${i}`] = (chapters.map((chapter) => {
         return { 
             name: `${chapter.content.displayName}: ${chapter.content.chapterTitle}`,
