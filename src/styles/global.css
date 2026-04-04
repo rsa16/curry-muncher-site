@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme inline {
+    --font-serif: var(--font-instrument);
+    --font-sans: var(--font-poppins);
+}
