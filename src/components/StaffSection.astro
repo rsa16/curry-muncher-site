@@ -1,0 +1,21 @@
+---
+import { Image } from "astro:assets";
+import type { StaffMember } from "../data/home";
+
+const { staff } = Astro.props as { staff: StaffMember[] };
+---
+
+<section class="section">
+	<h2>Staff</h2>
+	<div class="staff-grid">
+		{staff.map((member) => (
+			<article class="staff-card">
+				<div class="staff-avatar">
+					<Image src={member.image} alt={member.name} />
+				</div>
+				<p class="staff-name">{member.name}</p>
+				<p class="staff-role">{member.role}</p>
+			</article>
+		))}
+	</div>
+</section>

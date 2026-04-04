@@ -1,0 +1,38 @@
+---
+import { Image } from "astro:assets";
+
+import curryBg from "../assets/curry-bg.png";
+import kariiChan from "../assets/karii-chan.png";
+import coverMakeine from "../assets/covers/makeine-cover.jpg";
+import coverPajama from "../assets/covers/pajama-girl-cover.png";
+import coverTottekawa from "../assets/covers/tottekawa-cover.png";
+---
+
+<section class="hero">
+	<div class="hero-bg" aria-hidden="true">
+		<Image src={curryBg} alt="" />
+	</div>
+	<div class="hero-title">
+		<p class="hero-accent">Curry Muncher</p>
+		<p class="hero-main">Translations</p>
+		<p class="hero-tagline">- bringing curry to your doorstep since 2024</p>
+	</div>
+	<div class="hero-avatar">
+		<div class="avatar-ring"></div>
+		<Image src={kariiChan} alt="Karii-chan" />
+	</div>
+	<div class="series">
+		<article class="series-card">
+			<Image src={coverMakeine} alt="Too Many Losing Heroines cover" />
+			<p>Too Many Losing Heroines!</p>
+		</article>
+		<article class="series-card">
+			<Image src={coverPajama} alt="Alone in a Room with a Beautiful cover" />
+			<p>Alone in a Room with a Beautiful...</p>
+		</article>
+		<article class="series-card">
+			<Image src={coverTottekawa} alt="Date This Super Cute Me cover" />
+			<p>Date This Super Cute Me</p>
+		</article>
+	</div>
+</section>

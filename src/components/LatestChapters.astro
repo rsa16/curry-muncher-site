@@ -1,0 +1,19 @@
+---
+import type { Chapter } from "../data/home";
+
+const { chapters } = Astro.props as { chapters: Chapter[] };
+---
+
+<section class="section">
+	<h2>Latest Chapters</h2>
+	<div class="chapter-grid">
+		{chapters.map((entry: Chapter) => (
+			<article class="chapter-card">
+				<p class="chapter-series">{entry.series}</p>
+				<p class="chapter-number">{entry.chapter}</p>
+				<p class="chapter-title">{entry.title}</p>
+				<span class="chapter-arrow"></span>
+			</article>
+		))}
+	</div>
+</section>
