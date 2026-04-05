@@ -1,38 +1,45 @@
 ---
-import { Image } from "astro:assets";
+import type { Series } from "../data/home";
 
+import { Image } from "astro:assets";
 import curryBg from "../assets/curry-bg.png";
 import kariiChan from "../assets/karii-chan.png";
-import coverMakeine from "../assets/covers/makeine-cover.jpg";
-import coverPajama from "../assets/covers/pajama-girl-cover.png";
-import coverTottekawa from "../assets/covers/tottekawa-cover.png";
+
+const { series } = Astro.props as { series: Series[] }
 ---
 
-<section class="hero">
-	<div class="hero-bg" aria-hidden="true">
-		<Image src={curryBg} alt="" />
+<section class="hero flex flex-col relative">
+  <div class="hero-bg w-full overflow-hidden rounded-2xl absolute" aria-hidden="true">
+    <Image src={curryBg} class="w-full h-full object-cover" alt="" />
+    <div class="absolute inset-0 bg-[#15181d]/70"/>
+    <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(21,24,29,0)_0%,#15181D_70%)]"/>
+  </div>
+
+  <div class="z-100">
+
+	<header class="flex items-center justify-center gap-[40px] min-h-[60vh] p-[40px] text-center">
+		<div class="hero-title flex flex-col text-right max-w-2/3">
+			<p class="hero-accent text-[120px] bg-gradient-to-b from-[#F07A26] to-[#5E5E5E] bg-clip-text text-transparent leading-none font-serif italic">Curry Muncher</p>
+			<p class="hero-main text-[90px] font-sans">Translations</p>
+			<p class="hero-tagline italic">- bringing curry to your doorstep since 2024</p>
+		</div>
+		<div class="hero-avatar rounded-full overflow-hidden bg-[#35455B] w-[20vw] h-auto">
+			<div class="avatar-ring"></div>
+			<Image src={kariiChan} alt="Karii-chan" class="relative top-[22px] rotate-[8deg] scale-[0.9]" />
+		</div>
+	</header>
+
+	
+	<div class="series flex gap-4 mx-48">
+		{series.map((item) => (
+			<article class="series-card rounded-2xl w-full relative aspect-[5/7] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+				<Image src={item.cover} alt={item.alt} class="absolute inset-0 w-full h-full object-cover" />
+				<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.35)_55%,rgba(0,0,0,0.7)_100%)]" />
+				<p class="absolute bottom-0 left-0 right-0 px-4 pb-4 text-white text-xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+					{item.title}
+				</p>
+			</article>
+		))}
 	</div>
-	<div class="hero-title">
-		<p class="hero-accent">Curry Muncher</p>
-		<p class="hero-main">Translations</p>
-		<p class="hero-tagline">- bringing curry to your doorstep since 2024</p>
-	</div>
-	<div class="hero-avatar">
-		<div class="avatar-ring"></div>
-		<Image src={kariiChan} alt="Karii-chan" />
-	</div>
-	<div class="series">
-		<article class="series-card">
-			<Image src={coverMakeine} alt="Too Many Losing Heroines cover" />
-			<p>Too Many Losing Heroines!</p>
-		</article>
-		<article class="series-card">
-			<Image src={coverPajama} alt="Alone in a Room with a Beautiful cover" />
-			<p>Alone in a Room with a Beautiful...</p>
-		</article>
-		<article class="series-card">
-			<Image src={coverTottekawa} alt="Date This Super Cute Me cover" />
-			<p>Date This Super Cute Me</p>
-		</article>
-	</div>
+  </div>
 </section>
