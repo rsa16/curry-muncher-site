@@ -6,15 +6,17 @@ import StaffSection from "@components/StaffSection.astro";
 import AffiliatesSection from "@components/AffiliatesSection.astro";
 import InfoSplit from "@components/InfoSplit.astro";
 
-import { affiliates, chapters, staff } from "@data/home";
+import { series, affiliates, chapters, staff } from "@data/home";
 ---
 
 <BaseLayout title="Curry Muncher Translations">
-	<Hero />
+	<Hero series={series}/>
 
-	<LatestChapters chapters={chapters} />
-	<StaffSection staff={staff} />
-	<AffiliatesSection affiliates={affiliates} />
-	
-	<InfoSplit />
+	<div class="flex flex-col gap-16 mt-18 mx-32 mb-15">
+		<LatestChapters chapters={chapters} />
+		<!-- <StaffSection staff={staff} />
+		<AffiliatesSection affiliates={affiliates} />
+		<InfoSplit /> -->
+	</div>
+
 </BaseLayout>
