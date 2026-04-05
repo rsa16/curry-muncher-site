@@ -1,4 +1,16 @@
-<aside class="sidebar" aria-label="Sidebar">
-	<div class="sidebar-top"></div>
-	<div class="sidebar-bottom"></div>
+---
+import { Icon } from "astro-icon/components";
+---
+
+<aside class="sidebar z-1000 sticky h-screen px-3 py-4 left-0 top-0 bg-[#14171D] flex flex-col" aria-label="Sidebar">
+	<button class="icon-button" aria-label="Open menu">
+		<Icon name="lucide:sidebar-open"></Icon>
+	</button>
+
+	<div class="sidebar-top mt-8 flex-grow">
+		<Icon name="lucide:home"></Icon>
+	</div>
+	<div class="sidebar-bottom">
+		<Icon name="lucide:circle-question-mark"></Icon>
+	</div>
 </aside>
