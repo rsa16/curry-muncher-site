@@ -2,15 +2,15 @@
 import { Icon } from "astro-icon/components";
 ---
 
-<aside class="sidebar z-1000 sticky h-screen px-3 py-4 left-0 top-0 bg-[#14171D] flex flex-col" aria-label="Sidebar">
+<aside class="sidebar text-[#F8DCAD] z-2000 sticky left-0 top-0 hidden h-screen w-12 flex-col bg-[#101929] px-3 py-5 md:flex md:w-14" aria-label="Sidebar">
 	<button class="icon-button" aria-label="Open menu">
-		<Icon name="lucide:sidebar-open"></Icon>
+		<Icon name="lucide:sidebar-open" size={18}></Icon>
 	</button>
 
 	<div class="sidebar-top mt-8 flex-grow">
-		<Icon name="lucide:home"></Icon>
+		<Icon name="lucide:home" size={18}></Icon>
 	</div>
 	<div class="sidebar-bottom">
-		<Icon name="lucide:circle-question-mark"></Icon>
+		<Icon name="lucide:circle-question-mark" size={18}></Icon>
 	</div>
 </aside>

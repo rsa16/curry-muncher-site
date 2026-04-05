@@ -5,7 +5,7 @@
   --font-sans: var(--font-poppins);
 }
 
-* {
+/* * {
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.5) transparent;
 }
@@ -22,4 +22,17 @@
 
 *::-webkit-scrollbar-track {
   background-color: transparent;
+} */
+
+* {
+    /* Hide for Firefox */
+    scrollbar-width: none;
+    
+    /* Hide for IE, Edge and older browsers */
+    -ms-overflow-style: none;
+}
+
+/* Hide for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+    display: none;
 }

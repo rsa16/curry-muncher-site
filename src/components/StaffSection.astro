@@ -1,20 +1,24 @@
 ---
 import { Image } from "astro:assets";
-import type { StaffMember } from "../data/home";
+import type { StaffMember } from "@data/home";
 
 const { staff } = Astro.props as { staff: StaffMember[] };
 ---
 
 <section class="section">
-	<h2>Staff</h2>
-	<div class="staff-grid">
+	<h2 class="text-2xl font-semibold tracking-wide text-white">Staff</h2>
+	<div class="staff-grid mt-4 flex max-w-4xl items-start gap-12 overflow-x-auto pb-2">
 		{staff.map((member) => (
-			<article class="staff-card">
-				<div class="staff-avatar">
-					<Image src={member.image} alt={member.name} />
+			<article class="staff-card flex flex-col items-center gap-2 px-2 py-4 text-center">
+				<div class="staff-avatar relative h-28 w-28 overflow-hidden rounded-full ring-2 ring-blue-500/60 ring-offset-2 ring-offset-slate-950 sm:h-36 sm:w-36 md:h-40 md:w-40">
+					<Image src={member.image} alt={member.name} class="h-full w-full object-cover" />
 				</div>
-				<p class="staff-name">{member.name}</p>
-				<p class="staff-role">{member.role}</p>
+				<div>
+					<p class="staff-name mt-2 text-lg font-medium text-slate-100">{member.name}</p>
+					<p class="staff-role text-sm font-medium text-slate-400">
+						{member.role}
+					</p>
+				</div>
 			</article>
 		))}
 	</div>

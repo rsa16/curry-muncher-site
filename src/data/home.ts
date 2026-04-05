@@ -1,8 +1,10 @@
-import affiliateGlucose from "../assets/afilliate-banners/glucose-banner.png";
-import affiliateLegacy from "../assets/afilliate-banners/legacy-banner.png";
-import coverMakeine from "../assets/covers/makeine-cover.jpg";
-import coverPajama from "../assets/covers/pajama-girl-cover.png";
-import coverTottekawa from "../assets/covers/tottekawa-cover.png";
+import affiliateGlucose from "@assets/afilliate-banners/glucose-banner.png";
+import affiliateGlucoseLogo from "@assets/afilliate-banners/glucose-logo.png";
+import affiliateLegacy from "@assets/afilliate-banners/legacy-banner.png";
+import affiliateLegacyLogo from "@assets/afilliate-banners/legacy-logo.svg";
+import coverMakeine from "@assets/covers/makeine-cover.jpg";
+import coverPajama from "@assets/covers/pajama-girl-cover.png";
+import coverTottekawa from "@assets/covers/tottekawa-cover.png";
 
 // =================
 // UTILS
@@ -44,6 +46,7 @@ export type StaffMember = {
 export type Affiliate = {
 	name: string;
 	image: ImageMetadata;
+	logo?: ImageMetadata;
 };
 
 export type Series = {
@@ -51,6 +54,11 @@ export type Series = {
 	title: string;
 	cover: ImageMetadata;
 }
+
+export type FAQ = {
+	question: string;
+	answer: string;
+};
 
 // =================
 // EXPORTS
@@ -68,12 +76,31 @@ export const staff: StaffMember[] = [
 ];
 
 export const affiliates: Affiliate[] = [
-	{ name: "Glucose Translations", image: affiliateGlucose },
-	{ name: "LegacyEMTLs", image: affiliateLegacy },
+	{ name: "Glucose Translations", image: affiliateGlucose, logo: affiliateGlucoseLogo },
+	{ name: "LegacyEMTLs", image: affiliateLegacy, logo: affiliateLegacyLogo },
 ];
 
 export const series = [
 	{ cover: coverMakeine, alt: "Too Many Losing Heroines cover", title: "Too Many Losing Heroines!" },
 	{ cover: coverPajama, alt: "Alone in a Room with a Beautiful cover", title: "Alone in a Room with a Beautiful..." },
 	{ cover: coverTottekawa, alt: "Date This Super Cute Me cover", title: "Date This Super Cute Me" },
+];
+
+export const faqs: FAQ[] = [
+	{
+		question: "What does adaptive localization mean?",
+		answer: "We translate for meaning, tone, and impact first, then adjust phrasing so it reads naturally in English.",
+	},
+	{
+		question: "Do you keep honorifics and cultural notes?",
+		answer: "Yes when they add important context, and we add light notes only when needed for clarity.",
+	},
+	{
+		question: "How do you handle jokes or wordplay?",
+		answer: "We rebuild the joke in English to match the intent, even if the literal wording changes.",
+	},
+	{
+		question: "Can readers suggest fixes?",
+		answer: "Absolutely. We welcome feedback and use it to improve future releases.",
+	},
 ];

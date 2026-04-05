@@ -1,41 +1,41 @@
 ---
-import type { Series } from "../data/home";
+import type { Series } from "@data/home";
 
 import { Image } from "astro:assets";
-import curryBg from "../assets/curry-bg.png";
-import kariiChan from "../assets/karii-chan.png";
+import curryBg from "@assets/curry-bg.png";
+import kariiChan from "@assets/karii-chan.png";
 
 const { series } = Astro.props as { series: Series[] }
 ---
 
 <section class="hero flex flex-col relative">
-  <div class="hero-bg w-full overflow-hidden rounded-2xl absolute" aria-hidden="true">
-    <Image src={curryBg} class="w-full h-full object-cover" alt="" />
+  <div class="hero-bg w-full overflow-hidden absolute" aria-hidden="true">
+    <Image src={curryBg} class="w-full h-full object-cover scale-[1.05]" alt="" />
     <div class="absolute inset-0 bg-[#15181d]/70"/>
     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(21,24,29,0)_0%,#15181D_70%)]"/>
   </div>
 
-  <div class="z-100">
+  <div class="z-0">
 
-	<header class="flex items-center justify-center gap-[40px] min-h-[60vh] p-[40px] text-center">
-		<div class="hero-title flex flex-col text-right max-w-2/3">
-			<p class="hero-accent text-[120px] bg-gradient-to-b from-[#F07A26] to-[#5E5E5E] bg-clip-text text-transparent leading-none font-serif italic">Curry Muncher</p>
-			<p class="hero-main text-[90px] font-sans">Translations</p>
-			<p class="hero-tagline italic">- bringing curry to your doorstep since 2024</p>
+	<header class="flex min-h-[50vh] flex-col items-center justify-center gap-6 p-6 text-center sm:min-h-[60vh] md:flex-row md:gap-[40px] md:p-[40px]">
+		<div class="hero-title flex max-w-xl flex-col text-center md:max-w-2/3 md:text-right">
+			<p class="hero-accent bg-gradient-to-b from-[#F07A26] to-[#a85b23] bg-clip-text text-4xl font-serif italic leading-none text-transparent sm:text-6xl md:text-[140px]">Curry Muncher</p>
+			<p class="hero-main text-3xl font-sans sm:text-5xl md:text-[110px]">Translations</p>
+			<p class="hero-tagline mt-4 text-sm italic text-white/80 sm:text-base">- bringing curry to your doorstep since 2024</p>
 		</div>
-		<div class="hero-avatar rounded-full overflow-hidden bg-[#35455B] w-[20vw] h-auto">
+		<div class="hero-avatar h-36 w-36 overflow-hidden rounded-full bg-[#DB762E] sm:h-44 sm:w-44 md:h-[20vw] md:w-[20vw]">
 			<div class="avatar-ring"></div>
 			<Image src={kariiChan} alt="Karii-chan" class="relative top-[22px] rotate-[8deg] scale-[0.9]" />
 		</div>
 	</header>
 
-	
-	<div class="series flex gap-4 mx-48">
+	<div class="series relative mx-4 grid gap-4 sm:mx-6 sm:grid-cols-2 md:mx-12 lg:mx-48 lg:grid-cols-3">
 		{series.map((item) => (
-			<article class="series-card rounded-2xl w-full relative aspect-[5/7] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
-				<Image src={item.cover} alt={item.alt} class="absolute inset-0 w-full h-full object-cover" />
-				<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.35)_55%,rgba(0,0,0,0.7)_100%)]" />
-				<p class="absolute bottom-0 left-0 right-0 px-4 pb-4 text-white text-xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+			<article class="series-card group cursor-pointer rounded-2xl w-full relative z-12 aspect-[5/7] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.45)]">
+				<Image src={item.cover} alt={item.alt} class="absolute inset-0 w-full h-full object-cover transition duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]" />
+				<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.35)_55%,rgba(0,0,0,0.75)_100%)] transition duration-500 ease-out group-hover:opacity-90" />
+				<div class="absolute -inset-12 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),rgba(255,255,255,0)_60%)] opacity-0 transition duration-700 ease-out group-hover:opacity-100" />
+				<p class="absolute bottom-0 left-0 right-0 px-4 pb-4 text-white text-xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] transition duration-500 ease-out group-hover:translate-y-[-6px]">
 					{item.title}
 				</p>
 			</article>

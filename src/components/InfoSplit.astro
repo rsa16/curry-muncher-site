@@ -1,36 +1,71 @@
-<section class="section split">
-	<div class="panel">
-		<h2>FAQ</h2>
-		<div class="faq-item">
-			<span>What is your mom's middle name?</span>
-			<span class="faq-plus">+</span>
-		</div>
-		<div class="faq-item">
-			<span>What is your mom's middle name?</span>
-			<span class="faq-plus">+</span>
-		</div>
-		<div class="faq-item">
-			<span>What is your mom's middle name?</span>
-			<span class="faq-plus">+</span>
-		</div>
-		<div class="faq-item">
-			<span>What is your mom's middle name?</span>
-			<span class="faq-plus">+</span>
-		</div>
+---
+import { faqs } from "@data/home";
+---
+
+<section class="section split flex w-full flex-col gap-6 md:flex-row">
+	<div class="panel w-full rounded-2xl bg-[#2B3037] p-6 shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
+		<h2 class="text-xl font-semibold text-white md:text-2xl">FAQ</h2>
+		{faqs.map((faq, index) => (
+			<details class={`faq-item group border-b border-white/10 text-[#BFBFBF] ${index === 0 ? "mt-5" : ""}`}>
+				<summary class="flex cursor-pointer list-none items-center justify-between py-4">
+					<span class="text-sm font-medium sm:text-base">{faq.question}</span>
+					<span class="faq-plus text-lg font-semibold text-slate-400 transition-transform duration-300 group-open:rotate-45">
+						+
+					</span>
+				</summary>
+				<div class="faq-content overflow-hidden">
+					<p class="pb-4 text-sm leading-relaxed text-[#BFBFBF] opacity-0 transition-[opacity,transform] duration-300 ease-out translate-y-2 group-open:opacity-100 group-open:translate-y-0 sm:text-base">
+						{faq.answer}
+					</p>
+				</div>
+			</details>
+		))}
 	</div>
-	<div class="panel">
-		<h2>Localization Philosophy</h2>
-		<p>
-			We at Curry Muncher Translations are a firm believer of <strong>adaptive localization</strong>---translation
+	<div class="panel w-full rounded-2xl bg-[#2B3037] p-6 text-[#BFBFBF] shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
+		<h2 class="text-xl font-semibold text-white md:text-2xl">Localization Philosophy</h2>
+		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
+			We at Curry Muncher Translations are a firm believer of <strong class="font-semibold text-white">adaptive localization</strong>---translation
 			that prioritizes meaning, tone, and emotional impact over strict literal accuracy.
 		</p>
-		<p>
+		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
 			Our goal is to recreate the same experience for English readers that the original audience had. This means
-			preserving: <strong>1)</strong> Character relationships <strong>2)</strong> Authorial style and intent and
-			<strong>3)</strong> Cultural nuance.
+			preserving: <strong class="font-semibold text-white">1)</strong> Character relationships <strong class="font-semibold text-white">2)</strong> Authorial style and intent and
+			<strong class="font-semibold text-white">3)</strong> Cultural nuance.
 		</p>
-		<p>
-			We aim for translations that feel natural to read while staying faithful to the author's <em>intent</em>.
+		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
+			We aim for translations that feel natural to read while staying faithful to the author's <em class="text-white">intent</em>.
 		</p>
 	</div>
 </section>
+
+<style>
+	@supports (interpolate-size: allow-keywords) {
+		details {
+			interpolate-size: allow-keywords;
+		}
+	}
+
+	@supports selector(::details-content) {
+		details > summary + .faq-content {
+			height: 0;
+			overflow: hidden;
+			transition: height 300ms ease;
+		}
+
+		details[open] > summary + .faq-content {
+			height: auto;
+		}
+	}
+
+	/* Fallback for browsers without ::details-content support. */
+	@supports not selector(::details-content) {
+		.faq-content {
+			max-height: 0;
+			transition: max-height 300ms ease;
+		}
+
+		details[open] > summary + .faq-content {
+			max-height: 12rem;
+		}
+	}
+</style>
