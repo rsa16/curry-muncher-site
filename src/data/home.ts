@@ -72,8 +72,8 @@ export const chapters: Chapter[] = Array.from({ length: 6 }, () => ({
 export const staff: StaffMember[] = [
 	{ name: "rsa", role: "the owner, probably", image: getStaffImage("rsa16") },
 	{ name: "shion", role: "editor", image: getStaffImage("shion") },
+	{ name: "Vranesh", role: "proofreader", image: getStaffImage("Vranesh")},
 	{ name: "CosmicRunner", role: "proofreader", image: getStaffImage("CosmicRunner") },
-	{ name: "Vranesh", role: "proofreader/amazing person", image: getStaffImage("Vranesh")},
 	{ name: "air koi", role: "emotional support", image: getStaffImage("airkoi")},
 ];
 
@@ -91,11 +91,11 @@ export const series = [
 export const faqs: FAQ[] = [
 	{
 		question: "What does adaptive localization mean?",
-		answer: "We translate for meaning, tone, and impact first, then adjust phrasing so it reads naturally in English.",
+		answer: "We translate for meaning, tone, and cultural relevance over literal accuracy, then adjust phrasing so it reads naturally in English.",
 	},
 	{
 		question: "Do you keep honorifics and cultural notes?",
-		answer: "Yes when they add important context, and we add light notes only when needed for clarity.",
+		answer: "Yes, and we add light notes only when needed for clarity.",
 	},
 	{
 		question: "How do you handle jokes or wordplay?",

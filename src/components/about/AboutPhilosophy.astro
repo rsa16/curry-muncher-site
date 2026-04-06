@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from "astro:content";
+
+const requireEntry = <T,>(entry: T | undefined, id: string): T => {
+  if (!entry) {
+    throw new Error(`Missing content entry in "about": ${id}`);
+  }
+  return entry;
+};
+
+const philosophyEntry = requireEntry(await getEntry("about", "philosophy"), "philosophy-entry");
+const { Content: PhilosophyContent } = await render(philosophyEntry);
+const title = philosophyEntry.data.title ?? "OUR TRANSLATION PHILOSOPHY";
+---
+
+<section class="mx-4 mt-16 sm:mx-6 lg:mx-12">
+  <h2 id="philosophy" class="font-serif text-[48px] leading-none text-[#c9865d] sm:text-[72px] lg:text-[96px]">{title}</h2>
+
+  <div class="mt-8 max-w-5xl text-[18px] leading-relaxed text-[#d5b099] space-y-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:space-y-2 [&>ol]:mt-4">
+    <PhilosophyContent />
+  </div>
+</section>

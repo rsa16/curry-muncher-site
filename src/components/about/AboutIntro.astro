@@ -1,0 +1,45 @@
+---
+import { getEntry, render } from "astro:content";
+
+const requireEntry = <T,>(entry: T | undefined, id: string): T => {
+  if (!entry) {
+    throw new Error(`Missing content entry in "about": ${id}`);
+  }
+  return entry;
+};
+
+const introLeft = requireEntry(await getEntry("about", "intro-left"), "intro-left");
+const introMiddle = requireEntry(await getEntry("about", "intro-middle"), "intro-middle");
+const introRight = requireEntry(await getEntry("about", "intro-right"), "intro-right");
+
+const { Content: IntroLeftContent } = await render(introLeft);
+const { Content: IntroMiddleContent } = await render(introMiddle);
+const { Content: IntroRightContent } = await render(introRight);
+---
+
+<section class="mx-4 mt-10 text-[#d9cac1] sm:mx-6 lg:mx-12">
+  <div class="grid gap-10 lg:grid-cols-3">
+    <div class="text-base leading-relaxed first font-medium -translate-y-[20px]">
+      <IntroLeftContent/>
+    </div>
+
+    <div class="space-y-6 text-base leading-relaxed">
+      <IntroMiddleContent />
+    </div>
+
+    <div class="space-y-6 text-base leading-relaxed">
+      <IntroRightContent />
+    </div>
+  </div>
+
+  <p class="mt-6 text-right font-serif italic text-[#d9cac1]">- rsa</p>
+</section>
+
+<style is:global>
+  .first p::first-letter {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 3em;
+    font-weight: bold;
+    line-height: normal;
+  }
+</style>

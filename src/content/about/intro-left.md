@@ -1,0 +1,1 @@
+We're a small group of hobbyists who like light novels, and are passionate about their localizations. Brought together by our shared love for Japanese culture, we soon found ourselves enraptured with the art of bringing it to new audiences.

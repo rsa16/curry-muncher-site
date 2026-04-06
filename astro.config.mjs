@@ -24,7 +24,13 @@ export default defineConfig({
     {
       provider: fontProviders.fontsource(),
       name: "Poppins",
-      cssVariable: "--font-poppins"
+      cssVariable: "--font-poppins",
+      weights: [300, 400, 500, 600, 700]
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Merriweather",
+      cssVariable: "--font-merriweather"
     }
   ]
 });

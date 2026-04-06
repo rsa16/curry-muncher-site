@@ -1,0 +1,19 @@
+---
+import { getEntry } from "astro:content";
+import { Image } from "astro:assets";
+import aboutBg from "@assets/about-bg.png";
+
+const headerEntry = await getEntry("about", "header");
+const title = headerEntry?.data.title ?? "ABOUT US";
+---
+
+<section class="relative mx-4 mt-4 overflow-hidden rounded-2xl">
+  <div class="absolute inset-0" aria-hidden="true">
+    <Image src={aboutBg} alt="" class="h-full w-full object-cover" />
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(105,100,98,0.85)_0%,rgba(0,0,0,0)_55%)]" />
+  </div>
+
+  <div class="relative z-10 flex min-h-[220px] items-end px-6 pb-10 pt-20 sm:min-h-[280px] sm:px-10 sm:pb-12">
+    <h1 class="font-serif text-[64px] leading-none text-[#ffdd80] sm:text-[96px] lg:text-[120px]">{title}</h1>
+  </div>
+</section>

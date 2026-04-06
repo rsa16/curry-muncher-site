@@ -5,7 +5,7 @@ const { chapters } = Astro.props as { chapters: Chapter[] };
 ---
 
 <section class="section w-full max-w-full">
-	<h2 class="text-3xl font-semibold text-white tracking-wide md:text-2xl">Latest Chapters</h2>
+	<h2 class="text-3xl font-semibold text-white md:text-2xl">Latest Chapters</h2>
 	<div class="chapter-grid mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 		{chapters.map((entry: Chapter) => (
 			<article class="chapter-card group relative min-w-0 cursor-pointer rounded-2xl bg-white/10 p-4 text-white shadow-lg backdrop-blur transition duration-200 hover:-translate-y-1 hover:bg-white/20 hover:shadow-xl">

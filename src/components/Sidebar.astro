@@ -1,7 +1,17 @@
 ---
 import { Icon } from "astro-icon/components";
 
-const isHome = Astro.url.pathname === "/";
+const navItems = [
+	{ label: "Home", href: "/", icon: "lucide:home", position: "top" },
+	{ label: "Series", href: "/series", icon:"lucide:library", position: "top"},
+	{ label: "Staff", href: "/staff", icon:"lucide:users", position: "top"},
+	{ label: "About", href: "/about", icon:"lucide:info", position: "top"},
+	
+	{ label: "Contact Us", href: "/contact-us", icon: "lucide:mail", position: "bottom" },
+	{ label: "FAQ", href: "/faq", icon: "lucide:circle-question-mark", position: "bottom" },
+];
+
+const isActive = (href: string) => Astro.url.pathname === href;
 ---
 
 <aside
@@ -16,20 +26,36 @@ const isHome = Astro.url.pathname === "/";
 	</button>
 
 	<nav class="sidebar-top mt-8 flex-grow" aria-label="Main">
-		<a class={`sidebar-item ${isHome ? "is-active" : ""}`} href="/" aria-current={isHome ? "page" : undefined}>
-			<span class="sidebar-icon" aria-hidden="true">
-				<Icon name="lucide:home" size={18}></Icon>
-			</span>
-			<span class="sidebar-label">Home</span>
-		</a>
+		{navItems
+			.filter((item) => item.position === "top")
+			.map((item) => (
+				<a
+					class={`sidebar-item ${isActive(item.href) ? "is-active" : ""}`}
+					href={item.href}
+					aria-current={isActive(item.href) ? "page" : undefined}
+				>
+					<span class="sidebar-icon" aria-hidden="true">
+						<Icon name={item.icon} size={18}></Icon>
+					</span>
+					<span class="sidebar-label">{item.label}</span>
+				</a>
+			))}
 	</nav>
 	<div class="sidebar-bottom">
-		<button class="sidebar-item" type="button">
-			<span class="sidebar-icon" aria-hidden="true">
-				<Icon name="lucide:circle-question-mark" size={18}></Icon>
-			</span>
-			<span class="sidebar-label">About</span>
-		</button>
+		{navItems
+			.filter((item) => item.position === "bottom")
+			.map((item) => (
+				<a
+					class={`sidebar-item ${isActive(item.href) ? "is-active" : ""}`}
+					href={item.href}
+					aria-current={isActive(item.href) ? "page" : undefined}
+				>
+					<span class="sidebar-icon" aria-hidden="true">
+						<Icon name={item.icon} size={18}></Icon>
+					</span>
+					<span class="sidebar-label">{item.label}</span>
+				</a>
+			))}
 	</div>
 </aside>
 

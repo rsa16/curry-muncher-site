@@ -7,7 +7,7 @@ const { affiliates } = Astro.props as { affiliates: Affiliate[] };
 
 
 <section class="section">
-	<h2 class="text-3xl font-semibold text-white tracking-wide md:text-2xl">Afilliates</h2>
+	<h2 class="text-3xl font-semibold text-white md:text-2xl">Afilliates</h2>
 	<div class="affiliate-list mt-4 grid gap-3 sm:grid-cols-2">
 		{affiliates.map((affiliate) => (
 			<button class="affiliate-card group relative flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-2xl bg-white/5 px-4 py-6 text-left backdrop-blur transition hover:bg-white/10 duration-200" type="button">

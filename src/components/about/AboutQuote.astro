@@ -1,0 +1,31 @@
+---
+import { getEntry, render } from "astro:content";
+
+const requireEntry = <T,>(entry: T | undefined, id: string): T => {
+  if (!entry) {
+    throw new Error(`Missing content entry in "about": ${id}`);
+  }
+  return entry;
+};
+
+const quoteEntry = requireEntry(await getEntry("about", "quote"), "about-quote");
+
+const { Content: QuoteContent } = await render(quoteEntry);
+
+const author = quoteEntry.data.author ?? "";
+const work = quoteEntry.data.work ?? "";
+const section = quoteEntry.data.section ?? "";
+---
+
+<section class="mx-4 mt-12 mb-16 sm:mx-6 lg:mx-12">
+  <div class="relative border-l border-[#d5b099]/40 pl-6">
+    <div class="font-[var(--font-merriweather)] text-[18px] italic leading-relaxed text-[#8e7f76] [&>p]:mt-4 [&>p:first-child]:mt-0">
+      <QuoteContent />
+    </div>
+  </div>
+
+  <div class="mt-6 text-right font-[var(--font-merriweather)] text-[18px] text-[#d5b099]">
+    <p class="font-bold">- {author}, <span class="italic">{work}</span></p>
+    <p class="font-bold italic">{section}</p>
+  </div>
+</section>
