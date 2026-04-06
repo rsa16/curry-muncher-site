@@ -1,16 +1,54 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const isHome = Astro.url.pathname === "/";
 ---
 
-<aside class="sidebar text-[#F8DCAD] z-2000 sticky left-0 top-0 hidden h-screen w-12 flex-col bg-[#101929] px-3 py-5 md:flex md:w-14" aria-label="Sidebar">
-	<button class="icon-button" aria-label="Open menu">
-		<Icon name="lucide:sidebar-open" size={18}></Icon>
+<aside
+	class="sidebar text-[#F8DCAD] z-2000 sticky left-0 top-0 hidden h-screen flex-col bg-sidebar px-2 py-3 md:flex"
+	aria-label="Sidebar"
+>
+	<button class="icon-button sidebar-toggle" aria-label="Open menu" aria-expanded="false" type="button">
+		<span class="sidebar-icon" aria-hidden="true">
+			<Icon name="lucide:sidebar-open" size={18}></Icon>
+		</span>
+		<span class="sidebar-label ml-3 sidebar-toggle-label">Open</span>
 	</button>
 
-	<div class="sidebar-top mt-8 flex-grow">
-		<Icon name="lucide:home" size={18}></Icon>
-	</div>
+	<nav class="sidebar-top mt-8 flex-grow" aria-label="Main">
+		<a class={`sidebar-item ${isHome ? "is-active" : ""}`} href="/" aria-current={isHome ? "page" : undefined}>
+			<span class="sidebar-icon" aria-hidden="true">
+				<Icon name="lucide:home" size={18}></Icon>
+			</span>
+			<span class="sidebar-label">Home</span>
+		</a>
+	</nav>
 	<div class="sidebar-bottom">
-		<Icon name="lucide:circle-question-mark" size={18}></Icon>
+		<button class="sidebar-item" type="button">
+			<span class="sidebar-icon" aria-hidden="true">
+				<Icon name="lucide:circle-question-mark" size={18}></Icon>
+			</span>
+			<span class="sidebar-label">About</span>
+		</button>
 	</div>
 </aside>
+
+<script type="module">
+	const sidebar = document.querySelector(".sidebar");
+	const toggle = document.querySelector(".sidebar-toggle");
+
+	if (sidebar && toggle) {
+		const setExpanded = (expanded) => {
+			sidebar.classList.toggle("is-expanded", expanded);
+			toggle.setAttribute("aria-expanded", String(expanded));
+			const label = toggle.querySelector(".sidebar-toggle-label");
+			if (label) {
+				label.textContent = expanded ? "Close" : "Open";
+			}
+		};
+
+		toggle.addEventListener("click", () => {
+			setExpanded(!sidebar.classList.contains("is-expanded"));
+		});
+	}
+</script>

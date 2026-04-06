@@ -6,20 +6,32 @@ const { staff } = Astro.props as { staff: StaffMember[] };
 ---
 
 <section class="section">
-	<h2 class="text-2xl font-semibold tracking-wide text-white">Staff</h2>
-	<div class="staff-grid mt-4 flex max-w-4xl items-start gap-12 overflow-x-auto pb-2">
+	<h2 class="text-3xl font-semibold tracking-wide text-white md:text-2xl">Staff</h2>
+	<div class="staff-grid mt-4 flex gap-8 sm:gap-12 overflow-x-auto pb-2">
 		{staff.map((member) => (
-			<article class="staff-card flex flex-col items-center gap-2 px-2 py-4 text-center">
+			<article class="staff-card flex flex-1 flex-col items-center gap-2 px-2 py-4 text-center">
 				<div class="staff-avatar relative h-28 w-28 overflow-hidden rounded-full ring-2 ring-blue-500/60 ring-offset-2 ring-offset-slate-950 sm:h-36 sm:w-36 md:h-40 md:w-40">
 					<Image src={member.image} alt={member.name} class="h-full w-full object-cover" />
 				</div>
 				<div>
-					<p class="staff-name mt-2 text-lg font-medium text-slate-100">{member.name}</p>
-					<p class="staff-role text-sm font-medium text-slate-400">
+					<p class="staff-name mt-2 text-2xl font-medium text-slate-100 sm:text-lg">{member.name}</p>
+					<p class="staff-role text-lg font-medium text-slate-400 sm:text-sm">
 						{member.role}
 					</p>
 				</div>
 			</article>
 		))}
+		<a
+			href="/staff"
+			class="staff-card group flex flex-col items-end justify-center gap-3 px-2 py-4 text-center"
+			aria-label="See all staff"
+		>
+			<span class="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 text-white/90 transition group-hover:border-white/40 group-hover:text-white sm:h-16 sm:w-16">
+				<span class="text-2xl leading-none">&gt;</span>
+			</span>
+			<span class="text-lg font-semibold tracking-wide text-white/90 group-hover:text-white sm:text-base">
+				See all
+			</span>
+		</a>
 	</div>
 </section>

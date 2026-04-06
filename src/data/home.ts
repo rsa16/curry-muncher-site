@@ -70,9 +70,11 @@ export const chapters: Chapter[] = Array.from({ length: 6 }, () => ({
 }));
 
 export const staff: StaffMember[] = [
-	{ name: "rsa16", role: "the owner, probably", image: getStaffImage("rsa16") },
+	{ name: "rsa", role: "the owner, probably", image: getStaffImage("rsa16") },
 	{ name: "shion", role: "editor", image: getStaffImage("shion") },
 	{ name: "CosmicRunner", role: "proofreader", image: getStaffImage("CosmicRunner") },
+	{ name: "Vranesh", role: "proofreader/amazing person", image: getStaffImage("Vranesh")},
+	{ name: "air koi", role: "emotional support", image: getStaffImage("airkoi")},
 ];
 
 export const affiliates: Affiliate[] = [
@@ -104,3 +106,5 @@ export const faqs: FAQ[] = [
 		answer: "Absolutely. We welcome feedback and use it to improve future releases.",
 	},
 ];
+
+export const discordUrl = "https://discord.com/invite/SzfCeGfMN6"

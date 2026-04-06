@@ -23,12 +23,12 @@ const { title = "Curry Muncher Translations" } = Astro.props;
 
 		<title>{title}</title>
 	</head>
-	<body class="box-border min-h-screen bg-[#15181D]">
+	<body class="box-border min-h-screen sm:h-screen bg-sidebar">
 		<div class="page flex min-h-screen w-full text-white">
 			<Sidebar />
-			<div class="flex min-h-screen flex-grow flex-col page-main pr-4">
+			<div class="flex min-h-0 flex-grow flex-col page-main px-1 sm:px-0 sm:pr-4">
 				<TopNav />
-				<main class="content sm:rounded-2xl overflow-y-auto sm:overflow-x-hidden flex-1 h-full">
+				<main class="content sm:rounded-tl-2xl sm:rounded-tr-2xl overflow-y-auto bg-bg sm:overflow-x-hidden flex-1 h-full inset-shadow-[inset_-2px_2px_56px_1px_rgba(0,_0,_0,_0.5)]">
 					<slot />
 				</main>
 			</div>

@@ -3,36 +3,52 @@ import { faqs } from "@data/home";
 ---
 
 <section class="section split flex w-full flex-col gap-6 md:flex-row">
-	<div class="panel w-full rounded-2xl bg-[#2B3037] p-6 shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
-		<h2 class="text-xl font-semibold text-white md:text-2xl">FAQ</h2>
+	<div class="panel w-full rounded-2xl bg-white/10 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
+		<div class="panel-header">
+			<h2 class="text-3xl font-semibold text-white md:text-2xl">FAQ</h2>
+			<a
+				class="ml-auto inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-4 py-1.5 text-[0.9rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)]"
+				href="/faq"
+			>
+				See more
+			</a>
+		</div>
 		{faqs.map((faq, index) => (
-			<details class={`faq-item group border-b border-white/10 text-[#BFBFBF] ${index === 0 ? "mt-5" : ""}`}>
-				<summary class="flex cursor-pointer list-none items-center justify-between py-4">
-					<span class="text-sm font-medium sm:text-base">{faq.question}</span>
-					<span class="faq-plus text-lg font-semibold text-slate-400 transition-transform duration-300 group-open:rotate-45">
-						+
-					</span>
+			<details class={`faq-item border-b border-white/10 text-[#BFBFBF] ${index === 0 ? "mt-5" : ""}`}>
+				<summary class="faq-summary">
+					<span class="faq-question">{faq.question}</span>
+					<span class="faq-plus">+</span>
 				</summary>
-				<div class="faq-content overflow-hidden">
-					<p class="pb-4 text-sm leading-relaxed text-[#BFBFBF] opacity-0 transition-[opacity,transform] duration-300 ease-out translate-y-2 group-open:opacity-100 group-open:translate-y-0 sm:text-base">
-						{faq.answer}
-					</p>
+				<div class="faq-content">
+					<div class="faq-inner">
+						<p class="faq-answer">
+							{faq.answer}
+						</p>
+					</div>
 				</div>
 			</details>
 		))}
 	</div>
-	<div class="panel w-full rounded-2xl bg-[#2B3037] p-6 text-[#BFBFBF] shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
-		<h2 class="text-xl font-semibold text-white md:text-2xl">Localization Philosophy</h2>
-		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
+	<div class="panel w-full rounded-2xl bg-white/10 p-6 text-[#BFBFBF] shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
+		<div class="panel-header">
+			<h2 class="text-3xl font-semibold text-white md:text-2xl">Localization Philosophy</h2>
+			<a
+				class="ml-auto inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-4 py-1.5 text-[0.9rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)]"
+				href="/localization"
+			>
+				See more
+			</a>
+		</div>
+		<p class="mt-4 text-lg leading-relaxed text-[#BFBFBF] sm:text-base">
 			We at Curry Muncher Translations are a firm believer of <strong class="font-semibold text-white">adaptive localization</strong>---translation
 			that prioritizes meaning, tone, and emotional impact over strict literal accuracy.
 		</p>
-		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
+		<p class="mt-4 text-lg leading-relaxed text-[#BFBFBF] sm:text-base">
 			Our goal is to recreate the same experience for English readers that the original audience had. This means
 			preserving: <strong class="font-semibold text-white">1)</strong> Character relationships <strong class="font-semibold text-white">2)</strong> Authorial style and intent and
 			<strong class="font-semibold text-white">3)</strong> Cultural nuance.
 		</p>
-		<p class="mt-4 text-sm leading-relaxed text-[#BFBFBF] sm:text-base">
+		<p class="mt-4 text-lg leading-relaxed text-[#BFBFBF] sm:text-base">
 			We aim for translations that feel natural to read while staying faithful to the author's <em class="text-white">intent</em>.
 		</p>
 	</div>
@@ -43,6 +59,100 @@ import { faqs } from "@data/home";
 		details {
 			interpolate-size: allow-keywords;
 		}
+	}
+
+	.panel-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.faq-item {
+		margin-bottom: 0;
+		transition: margin-bottom 300ms ease;
+	}
+
+	.faq-item[open] {
+		margin-bottom: 0.75rem;
+	}
+
+	.faq-summary {
+		display: flex;
+		cursor: pointer;
+		list-style: none;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem 0;
+	}
+
+	.faq-summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq-question {
+		font-size: 1.125rem;
+		font-weight: 500;
+	}
+
+	.faq-plus {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: rgb(148 163 184);
+		transition: transform 300ms ease;
+	}
+
+	.faq-item[open] .faq-plus {
+		transform: rotate(45deg);
+	}
+
+	.faq-content {
+		overflow: hidden;
+	}
+
+	.faq-inner {
+		padding-bottom: 1rem;
+	}
+
+	.faq-answer {
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+		color: #bfbfbf;
+		opacity: 0;
+		transform: translateY(0.5rem);
+		transition: opacity 200ms ease, transform 200ms ease;
+	}
+
+	.faq-item[open] .faq-answer {
+		opacity: 1;
+		transform: translateY(0);
+		animation: faq-fade-in 300ms ease;
+	}
+
+	@keyframes faq-fade-in {
+		from {
+			opacity: 0;
+			transform: translateY(0.5rem);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.panel-header {
+			align-items: center;
+		}
+
+		.faq-question {
+			font-size: 1rem;
+		}
+
+		.faq-answer {
+			font-size: 1rem;
+		}
+
 	}
 
 	@supports selector(::details-content) {
@@ -57,7 +167,6 @@ import { faqs } from "@data/home";
 		}
 	}
 
-	/* Fallback for browsers without ::details-content support. */
 	@supports not selector(::details-content) {
 		.faq-content {
 			max-height: 0;
@@ -65,7 +174,7 @@ import { faqs } from "@data/home";
 		}
 
 		details[open] > summary + .faq-content {
-			max-height: 12rem;
+			max-height: 14rem;
 		}
 	}
 </style>

@@ -8,6 +8,12 @@ export default defineConfig({
   integrations: [icon()],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      host: true,
+      allowedHosts: [
+        '.loca.lt'
+      ]
+    }
   },
   fonts: [
     {
