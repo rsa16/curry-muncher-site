@@ -10,7 +10,7 @@ const { affiliates } = Astro.props as { affiliates: Affiliate[] };
 	<h2 class="text-3xl font-semibold text-white md:text-2xl">Afilliates</h2>
 	<div class="affiliate-list mt-4 grid gap-3 sm:grid-cols-2">
 		{affiliates.map((affiliate) => (
-			<button class="affiliate-card group relative flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-2xl bg-white/5 px-4 py-6 text-left backdrop-blur transition hover:bg-white/10 duration-200" type="button">
+			<a href={affiliate.url} class="affiliate-card group relative flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-2xl bg-white/5 px-4 py-6 text-left backdrop-blur transition hover:bg-white/10 duration-200">
 				<Image
 					src={affiliate.image}
 					alt={affiliate.name}
@@ -30,7 +30,7 @@ const { affiliates } = Astro.props as { affiliates: Affiliate[] };
 					{affiliate.name}
 				</span>
 				<span class="affiliate-arrow relative z-10 ml-auto inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white/80 ring-1 ring-white/15 transition group-hover:bg-white/20 group-hover:text-white after:content-['>'] after:text-lg after:leading-none"></span>
-			</button>
+			</a>
 		))}
 	</div>
 </section>

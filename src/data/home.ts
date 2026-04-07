@@ -81,6 +81,7 @@ export type StaffMember = {
 export type Affiliate = {
 	name: string;
 	image: ImageMetadata;
+	url: string;
 	logo?: ImageMetadata;
 };
 
@@ -113,8 +114,8 @@ export const staff: StaffMember[] = [
 ];
 
 export const affiliates: Affiliate[] = [
-	{ name: "Glucose Translations", image: affiliateGlucose, logo: affiliateGlucoseLogo },
-	{ name: "LegacyEMTLs", image: affiliateLegacy, logo: affiliateLegacyLogo },
+	{ name: "Glucose Translations", image: affiliateGlucose, url: "https://glucosetl.xyz", logo: affiliateGlucoseLogo },
+	{ name: "LegacyEMTLs", image: affiliateLegacy, url: "https://www.legacyemtls.com/", logo: affiliateLegacyLogo },
 ];
 
 export const series = [
