@@ -13,7 +13,7 @@ import { faqs } from "@data/home";
 				See more
 			</a>
 		</div>
-		{faqs.map((faq, index) => (
+		{faqs.slice(0, 4).map((faq, index) => (
 			<details class={`faq-item border-b border-white/10 text-[#BFBFBF] ${index === 0 ? "mt-5" : ""}`}>
 				<summary class="faq-summary">
 					<span class="faq-question">{faq.question}</span>
@@ -21,9 +21,7 @@ import { faqs } from "@data/home";
 				</summary>
 				<div class="faq-content">
 					<div class="faq-inner">
-						<p class="faq-answer">
-							{faq.answer}
-						</p>
+						<p class="faq-answer" set:html={faq.answer}></p>
 					</div>
 				</div>
 			</details>
