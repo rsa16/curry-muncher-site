@@ -1,0 +1,111 @@
+---
+import type { FAQ } from "@data/home";
+
+interface Props {
+	items: FAQ[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="pb-16" data-faq-root>
+	<ul class="flex flex-col gap-2 sm:gap-3">
+		{
+			items.map((item, index) => (
+				<li
+					class="cursor-pointer rounded-[20px] bg-[#25221e] px-4 py-5 transition-colors duration-300 hover:bg-[#2f2a24] sm:px-6 sm:py-6"
+					data-faq-item
+					data-index={String(index)}
+				>
+					<button
+						type="button"
+						class="group flex w-full cursor-pointer items-center gap-3 text-left"
+						aria-expanded="false"
+						aria-controls={`faq-panel-${index}`}
+						id={`faq-trigger-${index}`}
+					>
+						<span class="inline-flex size-6 shrink-0 items-center justify-center text-[#cfc4a6] sm:size-7" aria-hidden="true">
+							<svg
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="faq-chevron size-4 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] sm:size-5"
+							>
+								<path d="m6 9 6 6 6-6" />
+							</svg>
+						</span>
+						<span class="font-sans text-[0.98rem] font-semibold text-[#cfc4a6] sm:text-[1.125rem]">{item.question}</span>
+					</button>
+
+					<div
+						id={`faq-panel-${index}`}
+						role="region"
+						aria-labelledby={`faq-trigger-${index}`}
+						class:list={[
+							"grid overflow-hidden text-[#b4af92] transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
+							"grid-rows-[0fr] opacity-0 mt-0",
+						]}
+						data-faq-panel
+					>
+						<div class="min-h-0">
+						<p class="pr-2 text-sm leading-relaxed sm:text-[0.95rem]" set:html={item.answer}></p>
+						</div>
+					</div>
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<script>
+	const roots = Array.from(document.querySelectorAll("[data-faq-root]"));
+
+	const closeItem = (item: Element) => {
+		const trigger = item.querySelector("button");
+		const panel = item.querySelector("[data-faq-panel]");
+		const chevron = item.querySelector(".faq-chevron");
+
+		if (!trigger || !panel || !chevron) return;
+
+		trigger.setAttribute("aria-expanded", "false");
+		panel.classList.remove("grid-rows-[1fr]", "opacity-100", "mt-3");
+		panel.classList.add("grid-rows-[0fr]", "opacity-0", "mt-0");
+		chevron.classList.remove("rotate-180");
+	};
+
+	const openItem = (item: Element) => {
+		const trigger = item.querySelector("button");
+		const panel = item.querySelector("[data-faq-panel]");
+		const chevron = item.querySelector(".faq-chevron");
+
+		if (!trigger || !panel || !chevron) return;
+
+		trigger.setAttribute("aria-expanded", "true");
+		panel.classList.remove("grid-rows-[0fr]", "opacity-0", "mt-0");
+		panel.classList.add("grid-rows-[1fr]", "opacity-100", "mt-3");
+		chevron.classList.add("rotate-180");
+	};
+
+	const toggleItem = (item: Element, items: Element[]) => {
+		const trigger = item.querySelector("button");
+		if (!trigger) return;
+
+		const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+		items.forEach((otherItem) => closeItem(otherItem));
+		if (!isExpanded) openItem(item);
+	};
+
+	for (const root of roots) {
+		const items = Array.from(root.querySelectorAll("[data-faq-item]"));
+		if (!items.length) continue;
+
+		items.forEach((item) => {
+			closeItem(item);
+			item.addEventListener("click", () => toggleItem(item, items));
+		});
+	}
+</script>

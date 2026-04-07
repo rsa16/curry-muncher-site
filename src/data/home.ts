@@ -5,6 +5,7 @@ import affiliateLegacyLogo from "@assets/afilliate-banners/legacy-logo.svg";
 import coverMakeine from "@assets/covers/makeine-cover.jpg";
 import coverPajama from "@assets/covers/pajama-girl-cover.png";
 import coverTottekawa from "@assets/covers/tottekawa-cover.png";
+import faqMarkdown from "../content/faqs.md?raw";
 
 // =================
 // UTILS
@@ -26,6 +27,40 @@ const getStaffImage = (name: string): ImageMetadata => {
 	}
 
 	return entry[1] as ImageMetadata;
+};
+
+const parseMarkdown = (text: string): string => {
+	const applyInline = (str: string): string => {
+		return str
+			.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+			.replace(/\*(.+?)\*/g, "<em>$1</em>")
+			.replace(/__(.*?)__/g, "<strong>$1</strong>")
+			.replace(/_(.+?)_/g, "<em>$1</em>")
+			.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-blue-400 hover:underline">$1</a>');
+	};
+
+	return applyInline(text)
+		.replace(/\n+/g, '<div style="margin-bottom: 1rem;"></div>')
+};
+
+const parseFaqMarkdown = (markdown: string): FAQ[] => {
+	return markdown
+		.split(/\r?\n(?=##\s+)/)
+		.map((block) => block.trim())
+		.filter((block) => block.startsWith("## "))
+		.map((block) => {
+			const lines = block.split(/\r?\n/);
+			const question = lines[0].replace(/^##\s+/, "").trim();
+			const answer = lines
+				.slice(1)
+				.map((line) => line.trim())
+				.filter((line) => line.length > 0)
+				.join("\n")
+				.trim();
+
+			return { question, answer: parseMarkdown(answer) };
+		})
+		.filter((faq) => faq.question.length > 0 && faq.answer.length > 0);
 };
 
 // =================
@@ -88,23 +123,6 @@ export const series = [
 	{ cover: coverTottekawa, alt: "Date This Super Cute Me cover", title: "Date This Super Cute Me" },
 ];
 
-export const faqs: FAQ[] = [
-	{
-		question: "What does adaptive localization mean?",
-		answer: "We translate for meaning, tone, and cultural relevance over literal accuracy, then adjust phrasing so it reads naturally in English.",
-	},
-	{
-		question: "Do you keep honorifics and cultural notes?",
-		answer: "Yes, and we add light notes only when needed for clarity.",
-	},
-	{
-		question: "How do you handle jokes or wordplay?",
-		answer: "We rebuild the joke in English to match the intent, even if the literal wording changes.",
-	},
-	{
-		question: "Can readers suggest fixes?",
-		answer: "Absolutely. We welcome feedback and use it to improve future releases.",
-	},
-];
+export const faqs: FAQ[] = parseFaqMarkdown(faqMarkdown);
 
 export const discordUrl = "https://discord.com/invite/SzfCeGfMN6"

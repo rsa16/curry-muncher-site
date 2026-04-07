@@ -1,0 +1,16 @@
+---
+import FaqHeader from "@components/faq/FaqHeader.astro";
+import FaqAccordion from "@components/faq/FaqAccordion.astro";
+import type { FAQ } from "@data/home";
+
+interface Props {
+	faqs: FAQ[];
+}
+
+const { faqs } = Astro.props;
+---
+
+<div class="relative">
+	<FaqHeader />
+	<FaqAccordion items={faqs} />
+</div>

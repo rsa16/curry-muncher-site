@@ -1,0 +1,11 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import FaqSection from "@components/faq/FaqSection.astro";
+import { faqs } from "@data/home";
+---
+
+<BaseLayout title="Curry Muncher Translations | FAQ">
+	<div class="mx-4 sm:mx-96">
+		<FaqSection faqs={faqs} />
+	</div>
+</BaseLayout>
