@@ -1314,11 +1314,20 @@ input[type="checkbox"]:checked + .slider:before {
     }
 
     #close-btn {
+        display: inline-flex;
+    }
+
+    #close-btn {
         transition: transform 500ms var(--ease-out-soft), filter 500ms var(--ease-out-soft);
     }
 
     .novelTitle {
         font-size: clamp(1rem, 4vw, 1.15rem);
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
     }
 
     .header {
