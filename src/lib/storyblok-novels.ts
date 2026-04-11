@@ -72,6 +72,7 @@ export interface VolumeContent {
 	coverImage?: StoryblokAsset | null;
 	illustrations?: StoryblokAsset[] | null;
 	synopsis: StoryblokRichText;
+	translatorsNote?: StoryblokRichText | null;
 	credits?: StoryblokRichText | null;
 	changelog?: VolumeChangelogEntryBlock[] | null;
 	downloads?: VolumeDownloadBlock[] | null;

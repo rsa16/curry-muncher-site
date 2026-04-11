@@ -12,6 +12,7 @@ interface Props {
 
 const { blok, chapters, illustrationAssets, changelogEntries } = Astro.props as Props;
 const synopsisHtml = renderRichText(blok.synopsis as any);
+const translatorsNoteHtml = blok.translatorsNote ? renderRichText(blok.translatorsNote as any) : '';
 ---
 
 <section class="flex w-full flex-1 flex-col gap-[15px] xl:max-w-[571px]">
@@ -66,7 +67,11 @@ const synopsisHtml = renderRichText(blok.synopsis as any);
 
 	<div class="min-h-[20vh] rounded-[15px] bg-[rgba(255,255,255,0.1)] p-[15px]">
 		<p class="text-[17px] font-medium leading-[1.46] text-[#b9b9b9]">Translator’s Note</p>
-		<p class="mt-2 text-[14px] leading-[1.46] text-white/55">No translator note yet. To do later.</p>
+		{translatorsNoteHtml ? (
+			<div class="mt-2 text-[14px] leading-[1.46] text-white/90" set:html={translatorsNoteHtml}></div>
+		) : (
+			<p class="mt-2 text-[14px] leading-[1.46] text-white/55">No translator note yet.</p>
+		)}
 	</div>
 </section>
 
