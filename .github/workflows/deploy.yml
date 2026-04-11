@@ -64,9 +64,12 @@ jobs:
           version = "0.0.1"
           description = "Astro static site for Curry Muncher"
 
+          [dependencies]
+          "sharrattj/static-web-server" = "1"
+
           [fs]
           public = "dist"
           EOF
 
       - name: Deploy static site to Wasmer
-        run: wasmer deploy --bump
+        run: wasmer deploy --bump --non-interactive -v
