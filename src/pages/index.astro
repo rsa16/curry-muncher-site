@@ -60,14 +60,17 @@ const chapterStories = (await storyblokApi.getAll('cdn/stories', {
 const latestChapters: LatestChapterCard[] = chapterStories.slice(0, 6).map((chapter) => {
 	const novelSlug = getNovelSlug(chapter.full_slug);
 	const volumeSlug = getVolumeSlug(chapter.full_slug);
+	const series = novelTitleBySlug.get(novelSlug);
+
+	if (!series) return null;
 
 	return {
-		series: novelTitleBySlug.get(novelSlug),
+		series,
 		chapter: chapter.content.displayName,
 		title: chapter.content.chapterTitle,
 		href: buildChapterRoute(novelSlug, volumeSlug, toPublicChapterSlug(volumeSlug, chapter.slug)),
 	};
-});
+}).filter((chapter): chapter is LatestChapterCard => chapter !== null);
 ---
 
 <BaseLayout title="Curry Muncher Translations">
