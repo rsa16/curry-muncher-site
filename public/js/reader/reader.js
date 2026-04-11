@@ -269,7 +269,8 @@
     }
     if (els.widthRange) {
       els.widthRange.value = String(percentage);
-      els.widthRange.style.setProperty("--range-progress", `${percentage}%`);
+      const progressPercent = Math.max(0, Math.min(100, (percentage - 50) * 2));
+      els.widthRange.style.setProperty("--range-progress", `${progressPercent}%`);
     }
     if (els.constraintLabel) {
       els.constraintLabel.textContent = `Constrain Width (${percentage}%)`;
@@ -593,7 +594,12 @@
       saveSettings();
     });
     els.widthRange?.addEventListener("input", () => {
-      state.constraints.percentage = Number.parseInt(els.widthRange.value, 10) || state.constraints.percentage;
+      const val = Number.parseInt(els.widthRange.value, 10);
+      if (Number.isFinite(val)) {
+        state.constraints.percentage = val;
+        const progressPercent = Math.max(0, Math.min(100, (val - 50) * 2));
+        els.widthRange.style.setProperty("--range-progress", `${progressPercent}%`);
+      }
       applyWidthConstraint();
       saveSettings();
     });

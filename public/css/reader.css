@@ -832,9 +832,6 @@ html {
     margin-top: 20px;
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: calc(min(76vh, 760px) - 112px);
     padding-right: 6px;
 }
 
@@ -1270,11 +1267,12 @@ html {
     background: linear-gradient(
         to right,
         var(--highlight-color) 0,
-        var(--highlight-color) var(--range-progress, 73%),
-        rgba(var(--primary-font-color), 0.22) var(--range-progress, 73%),
+        var(--highlight-color) var(--range-progress, 80%),
+        rgba(var(--primary-font-color), 0.22) var(--range-progress, 80%),
         rgba(var(--primary-font-color), 0.22) 100%
     );
     outline: none;
+    padding: 0 11px;
 }
 
 #constraintContainer input[type="range"]::-webkit-slider-thumb {
@@ -1421,7 +1419,7 @@ input[type="checkbox"]:checked + .slider:before {
 
     .menuChild {
         width: calc(100% - 40px);
-        max-height: min(68vh, 620px);
+        max-height: min(74vh, 680px);
         padding: 18px 16px;
         border-radius: 16px;
     }
@@ -1432,7 +1430,6 @@ input[type="checkbox"]:checked + .slider:before {
 
     .content {
         margin-top: 14px;
-        max-height: calc(min(68vh, 620px) - 88px);
         padding-right: 4px;
     }
 
