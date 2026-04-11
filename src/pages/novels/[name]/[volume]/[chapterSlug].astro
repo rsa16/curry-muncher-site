@@ -4,6 +4,7 @@ import { Font } from "astro:assets";
 import {
     asEditableBlok,
     buildChapterRoute,
+    buildVolumeRoute,
     extractRichTextParagraphs,
     formatLongDate,
     getNovelSlug,
@@ -70,6 +71,7 @@ const previousChapterHref = previousChapter
 const nextChapterHref = nextChapter
     ? buildChapterRoute(name, volume, toPublicChapterSlug(volume, nextChapter.slug))
     : '';
+const volumeHref = buildVolumeRoute(name, volume);
 
 const renderedRichText: string = renderRichText(chapterStory.content.content as any) ?? '';
 const chapterDate = formatLongDate(chapterStory.content.postDate);
@@ -167,9 +169,18 @@ const canonicalUrl = resolveAbsoluteUrl(`/novels/${name}/${volume}/${currentChap
         <main id="app">
             <section id="mainContent">
                 <div class="menu">
-                    <p id="close-btn">Close</p>
+                    <div class="menu-header">
+                        <a href={volumeHref} class="menuBackLink" aria-label={`Back to ${volumeStory.content.displayName}`}>
+                            <iconify-icon icon="fluent-mdl2:back"></iconify-icon>
+                        </a>
+                        <a href={`/novels/${name}`} class="novelTitleLink" aria-label={`Open ${novelStory.content.name}`}>
+                            <h1 class="novelTitle">{novelStory.content.name}</h1>
+                        </a>
+                        <button id="close-btn" type="button" aria-label="Close reader menu">
+                            <iconify-icon icon="material-symbols:close-rounded"></iconify-icon>
+                        </button>
+                    </div>
                     <div class="header">
-                        <h1 class="novelTitle">{novelStory.content.name}</h1>
                         <h3 class="volumeNumber">{volumeStory.content.displayName}</h3>
                     </div>
                     <div class="toc">
