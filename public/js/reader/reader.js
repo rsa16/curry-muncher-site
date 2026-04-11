@@ -2,10 +2,11 @@
   const STORAGE_KEY = "reader.settings";
   const THEMES = ["kanin", "dark", "light", "sepia"];
   const FONTS = {
-    kanin: "var(--font-poppins), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     serif: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
     arial: "var(--font-poppins), Arial, ui-sans-serif, system-ui, sans-serif"
   };
+  const MIN_MARGIN = 0;
+  const MAX_MARGIN = 180;
 
   const defaults = {
     fontSize: 20,
@@ -14,7 +15,7 @@
     indentWidth: 1,
     textAlign: "left",
     theme: "dark",
-    font: "kanin",
+    font: "serif",
     indent: true,
     menuOpen: !window.matchMedia("(max-width: 900px)").matches,
     minimizedNav: false,
@@ -48,6 +49,7 @@
     maxTooltip: document.querySelector(".max .tooltip-text"),
     closeBtn: document.getElementById("close-btn"),
     infoBtn: document.querySelector(".info"),
+    infoTooltip: document.querySelector(".info .tooltip-text"),
     widthBtn: document.getElementById("width-btn"),
     widthBtnText: document.querySelector("#width-btn p"),
     widthBtnIcon: document.querySelector("#width-btn iconify-icon"),
@@ -102,10 +104,19 @@
         ? (parsedParagraphSpacing > 4 ? parsedParagraphSpacing / effectiveFontSize : parsedParagraphSpacing)
         : defaults.paragraphSpacing;
       const parsedIndentWidth = Number(parsed.indentWidth);
+      const parsedMargins = Array.isArray(parsed.margins) ? parsed.margins : defaults.margins;
+      const parsedFont = typeof parsed.font === "string" ? parsed.font : defaults.font;
+      const normalizedFont = Object.prototype.hasOwnProperty.call(FONTS, parsedFont) ? parsedFont : defaults.font;
+      const normalizedMargins = [
+        clampMargin(parsedMargins[0]),
+        clampMargin(parsedMargins[1])
+      ];
 
       return {
         ...defaults,
         ...parsed,
+        font: normalizedFont,
+        margins: normalizedMargins,
         lineSpacing: parsed.lineSpacing ?? parsed.spacing ?? defaults.lineSpacing,
         paragraphSpacing: Math.max(0, Math.min(4, paragraphSpacingEm)),
         indentWidth: Number.isFinite(parsedIndentWidth) ? Math.max(0, Math.min(4, parsedIndentWidth)) : defaults.indentWidth,
@@ -121,6 +132,11 @@
 
   function saveSettings() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function clampMargin(value) {
+    if (!Number.isFinite(value)) return MIN_MARGIN;
+    return Math.max(MIN_MARGIN, Math.min(MAX_MARGIN, Math.round(value)));
   }
 
   function setSelected(elements, matcher) {
@@ -141,7 +157,7 @@
     els.readerArticle.style.fontSize = `${state.fontSize}px`;
     bodyContainer.style.lineHeight = String(state.lineSpacing);
     bodyContainer.style.textAlign = state.textAlign;
-    els.readerArticle.style.fontFamily = FONTS[state.font] || FONTS.kanin;
+    els.readerArticle.style.fontFamily = FONTS[state.font] || FONTS.serif;
 
     const paragraphs = Array.from(bodyContainer.querySelectorAll("p"));
     let skipIndentForNextParagraph = false;
@@ -185,9 +201,18 @@
   }
 
   function applyMargins() {
-    if (!els.readerContent) return;
-    const [x, y] = state.margins;
-    els.readerContent.style.padding = `${y}px ${x}px calc(${y}px + 56px + 6vh)`;
+    if (!els.readerContent || !els.readerInner) return;
+    const x = clampMargin(state.margins[0]);
+    const y = clampMargin(state.margins[1]);
+    state.margins = [x, y];
+    if (state.constraints.fill) {
+      els.readerContent.style.margin = "0";
+      els.readerContent.style.padding = `${y}px ${x}px`;
+    } else {
+      els.readerContent.style.padding = "0";
+      els.readerContent.style.margin = `${y}px ${x}px`;
+    }
+    applyWidthConstraint();
     if (els.marginX) {
       els.marginX.textContent = String(x);
     }
@@ -220,7 +245,8 @@
   function applyWidthConstraint() {
     if (!els.readerInner || !els.readerContent) return;
     const { fill, percentage } = state.constraints;
-    const readerWidth = els.readerContent.clientWidth;
+    const horizontalMargins = fill ? 0 : clampMargin(state.margins[0]) * 2;
+    const readerWidth = Math.max(0, els.readerContent.clientWidth - horizontalMargins);
     if (fill) {
       els.readerInner.style.width = `${percentage}%`;
       els.readerInner.style.maxWidth = "none";
@@ -278,7 +304,11 @@
     if (!els.menu || !els.reader) return;
     els.menu.classList.toggle("hidden", !state.menuOpen);
     els.reader?.classList.toggle("menu-hidden", !state.menuOpen);
+    els.infoBtn?.classList.toggle("active", state.menuOpen);
     els.maxIcon?.classList.toggle("hidden", state.menuOpen);
+    if (els.infoTooltip) {
+      els.infoTooltip.textContent = state.menuOpen ? "Hide sidebar" : "Show sidebar";
+    }
     applyReaderLayout();
   }
 
@@ -496,7 +526,7 @@
     const parseEditableNumber = (text, fallback) => {
       const normalized = (text || "").replace(/[^\d.-]/g, "").trim();
       const value = Number.parseInt(normalized, 10);
-      return Number.isFinite(value) ? Math.max(0, value) : fallback;
+      return Number.isFinite(value) ? clampMargin(value) : clampMargin(fallback);
     };
 
     const commitMargins = () => {
@@ -507,8 +537,23 @@
       saveSettings();
     };
 
+    const previewMargins = () => {
+      if (!els.readerContent || !els.readerInner) return;
+      const x = parseEditableNumber(els.marginX?.textContent, state.margins[0]);
+      const y = parseEditableNumber(els.marginY?.textContent, state.margins[1]);
+      state.margins = [x, y];
+      if (state.constraints.fill) {
+        els.readerContent.style.margin = "0";
+        els.readerContent.style.padding = `${y}px ${x}px ${y}px`;
+      } else {
+        els.readerContent.style.padding = "0";
+        els.readerContent.style.margin = `${y}px ${x}px ${y}px`;
+      }
+      applyWidthConstraint();
+    };
+
     [els.marginX, els.marginY].forEach((el) => {
-      el?.addEventListener("input", commitMargins);
+      el?.addEventListener("input", previewMargins);
       el?.addEventListener("blur", commitMargins);
       el?.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -536,6 +581,7 @@
 
     const updateFill = (fill) => {
       state.constraints.fill = fill;
+      applyMargins();
       applyWidthConstraint();
       saveSettings();
     };

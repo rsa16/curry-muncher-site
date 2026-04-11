@@ -471,7 +471,7 @@ html {
     height: 100%;
     overflow-y: auto;
     z-index: 0;
-    padding: 36px 30px calc(56px + 6vh);
+    margin: 36px 30px calc(56px + 6vh);
     scroll-padding-bottom: calc(56px + 6vh);
 }
 
@@ -488,6 +488,7 @@ html {
     font-size: 20px;
     line-height: 1.7;
     word-wrap: break-word;
+    padding-top: 40px;
     padding-bottom: 40px;
 }
 
@@ -673,10 +674,19 @@ html {
 }
 
 .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-left: 20px;
     font-size: 20px;
+    line-height: 1;
     cursor: pointer;
     transition: color 240ms ease, opacity 240ms ease;
+}
+
+.icon iconify-icon {
+    display: block;
+    line-height: 1;
 }
 
 .icon.hidden {
@@ -685,6 +695,14 @@ html {
 }
 
 .icon:hover {
+    color: var(--highlight-color);
+}
+
+.genStuff .info iconify-icon {
+    font-size: 26px;
+}
+
+.info.active {
     color: var(--highlight-color);
 }
 
