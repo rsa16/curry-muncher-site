@@ -772,6 +772,7 @@ html {
     flex-direction: column;
     background-color: var(--menu-bg);
     width: min(55vh, calc(100% - 48px));
+    height: clamp(420px, 76vh, 760px);
     border-radius: 20px;
     padding: 25px 35px;
     box-shadow: 5px 5px 100px 0px rgba(0, 0, 0, 0.3);
@@ -809,6 +810,11 @@ html {
 
 .content {
     margin-top: 20px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
 }
 
 .content div {
@@ -915,19 +921,37 @@ html {
 }
 
 #paragraphHeight input[type="number"],
-#paragraphSpacingControl input[type="number"] {
+#paragraphSpacingControl input[type="number"],
+#indentWidthControl input[type="number"] {
     color: rgb(var(--primary-font-color));
     font-size: 18px;
     font-family: inherit;
     text-align: left;
-    padding-right: 42px;
+    padding-right: 30px;
+    background-image: linear-gradient(
+        to right,
+        var(--button-bg) 0,
+        var(--button-bg) calc(100% - 26px),
+        rgba(var(--primary-font-color), 0.08) calc(100% - 26px),
+        rgba(var(--primary-font-color), 0.08) 100%
+    );
 }
 
 #paragraphHeight input[type="number"]::-webkit-outer-spin-button,
 #paragraphHeight input[type="number"]::-webkit-inner-spin-button,
 #paragraphSpacingControl input[type="number"]::-webkit-outer-spin-button,
-#paragraphSpacingControl input[type="number"]::-webkit-inner-spin-button {
+#paragraphSpacingControl input[type="number"]::-webkit-inner-spin-button,
+#indentWidthControl input[type="number"]::-webkit-outer-spin-button,
+#indentWidthControl input[type="number"]::-webkit-inner-spin-button {
     opacity: 1;
+    cursor: pointer;
+    filter: invert(0.78);
+    margin: 0;
+}
+
+#indentWidthControl input[type="number"]:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 .numInput div > div:focus,
@@ -980,6 +1004,23 @@ html {
 #spacing div > input,
 #paragraphSpacing div > input {
     width: 100%;
+}
+
+.settingsRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 15px;
+    margin-bottom: 18px;
+}
+
+.settingsRow > .numInput {
+    margin: 0;
+}
+
+.settingsRow #spacing,
+.settingsRow #paragraphSpacing {
+    margin: 0;
 }
 
 .multiSelect {
@@ -1360,5 +1401,52 @@ input[type="checkbox"]:checked + .slider:before {
 
     .menuChild {
         width: calc(100% - 40px);
+        height: min(68vh, 620px);
+        padding: 18px 16px;
+        border-radius: 16px;
+    }
+
+    .menuTop h1 {
+        font-size: 22px;
+    }
+
+    .content {
+        margin-top: 14px;
+        padding-right: 4px;
+    }
+
+    .content h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+
+    .numInput {
+        margin-top: 10px;
+    }
+
+    #spacing,
+    #paragraphSpacing {
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+
+    #spacing > h3,
+    #paragraphSpacing > h3 {
+        margin-bottom: 8px;
+    }
+
+    #fonts {
+        column-gap: 10px;
+    }
+
+    #fonts .menuFont {
+        min-height: 84px;
+        padding: 10px 8px;
+    }
+
+    .settingsRow {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
     }
 }

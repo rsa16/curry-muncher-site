@@ -10,7 +10,8 @@
   const defaults = {
     fontSize: 20,
     lineSpacing: 1.5,
-    paragraphSpacing: 12,
+    paragraphSpacing: 0.6,
+    indentWidth: 1,
     textAlign: "left",
     theme: "dark",
     font: "kanin",
@@ -67,6 +68,7 @@
     decreaseFont: document.querySelector(".decreaseFont"),
     lineSpacingInput: document.querySelector("#paragraphHeight input"),
     paragraphSpacingInput: document.querySelector("#paragraphSpacingControl input"),
+    indentWidthInput: document.querySelector("#indentWidthControl input"),
     alignmentOptions: Array.from(document.querySelectorAll("#alignment > iconify-icon")),
     fontOptions: Array.from(document.querySelectorAll("#fonts > .menuFont")),
     indentSwitch: document.querySelector("#indentSwitch input[type='checkbox']"),
@@ -91,10 +93,22 @@
   function loadSettings() {
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+      const parsedFontSize = Number(parsed.fontSize);
+      const effectiveFontSize = Number.isFinite(parsedFontSize) && parsedFontSize > 0
+        ? parsedFontSize
+        : defaults.fontSize;
+      const parsedParagraphSpacing = Number(parsed.paragraphSpacing);
+      const paragraphSpacingEm = Number.isFinite(parsedParagraphSpacing)
+        ? (parsedParagraphSpacing > 4 ? parsedParagraphSpacing / effectiveFontSize : parsedParagraphSpacing)
+        : defaults.paragraphSpacing;
+      const parsedIndentWidth = Number(parsed.indentWidth);
+
       return {
         ...defaults,
         ...parsed,
         lineSpacing: parsed.lineSpacing ?? parsed.spacing ?? defaults.lineSpacing,
+        paragraphSpacing: Math.max(0, Math.min(4, paragraphSpacingEm)),
+        indentWidth: Number.isFinite(parsedIndentWidth) ? Math.max(0, Math.min(4, parsedIndentWidth)) : defaults.indentWidth,
         constraints: {
           ...defaults.constraints,
           ...(parsed.constraints || {})
@@ -134,7 +148,7 @@
 
     paragraphs.forEach((p, index) => {
       const hasCenteredMarker = Boolean(p.querySelector(".text-center"));
-      p.style.margin = `${state.paragraphSpacing}px 0`;
+      p.style.margin = `${state.paragraphSpacing}em 0`;
 
       if (hasCenteredMarker) {
         p.style.textAlign = "center";
@@ -145,7 +159,7 @@
 
       p.style.textAlign = "";
       const shouldIndent = state.indent && index > 0 && !skipIndentForNextParagraph;
-      p.style.textIndent = shouldIndent ? "1em" : "0";
+      p.style.textIndent = shouldIndent ? `${state.indentWidth}em` : "0";
       skipIndentForNextParagraph = false;
     });
 
@@ -160,6 +174,10 @@
     }
     if (els.indentSwitch) {
       els.indentSwitch.checked = state.indent;
+    }
+    if (els.indentWidthInput) {
+      els.indentWidthInput.value = String(state.indentWidth);
+      els.indentWidthInput.disabled = !state.indent;
     }
 
     setSelected(els.alignmentOptions, (el) => el.id === `align-${state.textAlign}`);
@@ -433,7 +451,7 @@
 
     els.paragraphSpacingInput?.addEventListener("change", () => {
       const n = Number.parseFloat(els.paragraphSpacingInput.value);
-      state.paragraphSpacing = Number.isFinite(n) ? Math.max(0, Math.min(48, n)) : state.paragraphSpacing;
+      state.paragraphSpacing = Number.isFinite(n) ? Math.max(0, Math.min(4, n)) : state.paragraphSpacing;
       applyTypography();
       saveSettings();
     });
@@ -456,6 +474,13 @@
 
     els.indentSwitch?.addEventListener("change", () => {
       state.indent = els.indentSwitch.checked;
+      applyTypography();
+      saveSettings();
+    });
+
+    els.indentWidthInput?.addEventListener("change", () => {
+      const n = Number.parseFloat(els.indentWidthInput.value);
+      state.indentWidth = Number.isFinite(n) ? Math.max(0, Math.min(4, n)) : state.indentWidth;
       applyTypography();
       saveSettings();
     });
