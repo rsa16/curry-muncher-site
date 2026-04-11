@@ -561,6 +561,20 @@ html {
     margin: 12px 0;
 }
 
+.readerBody ul,
+.readerBody ol {
+    margin: 16px 0 20px;
+    padding-left: 1.5em;
+}
+
+.readerBody li {
+    margin: 0.6em 0;
+}
+
+.readerBody li > p {
+    margin: 0.35em 0;
+}
+
 .readerBody .text-center {
     display: block;
     width: 100%;
