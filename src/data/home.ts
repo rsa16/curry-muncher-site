@@ -88,7 +88,8 @@ export type Affiliate = {
 export type Series = {
 	alt: string;
 	title: string;
-	cover: ImageMetadata;
+	cover: ImageMetadata | string;
+	href: string;
 }
 
 export type FAQ = {
@@ -119,9 +120,9 @@ export const affiliates: Affiliate[] = [
 ];
 
 export const series = [
-	{ cover: coverMakeine, alt: "Too Many Losing Heroines cover", title: "Too Many Losing Heroines!" },
-	{ cover: coverPajama, alt: "Alone in a Room with a Beautiful cover", title: "Alone in a Room with a Beautiful..." },
-	{ cover: coverTottekawa, alt: "Date This Super Cute Me cover", title: "Date This Super Cute Me" },
+	{ cover: coverMakeine, alt: "Too Many Losing Heroines cover", title: "Too Many Losing Heroines!", href: "/novels/too-many-losing-heroines" },
+	{ cover: coverPajama, alt: "Alone in a Room with a Beautiful cover", title: "Alone in a Room with a Beautiful...", href: "/novels/alone-in-a-room-with-a-beautiful" },
+	{ cover: coverTottekawa, alt: "Date This Super Cute Me cover", title: "Date This Super Cute Me", href: "/novels/date-this-super-cute-me" },
 ];
 
 export const faqs: FAQ[] = parseFaqMarkdown(faqMarkdown);

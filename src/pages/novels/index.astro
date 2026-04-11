@@ -1,0 +1,41 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { series as fallbackSeries, type Series } from "@data/home";
+import SeriesHeader from "@components/novels/SeriesHeader.astro";
+import SeriesGrid from "@components/novels/SeriesGrid.astro";
+import { resolveStoryblokAsset, type NovelStory } from "@lib/storyblok-novels";
+
+const storyblokApi = useStoryblokApi();
+const novelStories = (await storyblokApi.getAll('cdn/stories', {
+	content_type: 'Novel',
+	starts_with: 'novels/',
+	version: 'published',
+	sort_by: 'first_published_at:desc'
+})) as NovelStory[];
+
+const storyblokSeries: Series[] = novelStories.reduce<Series[]>((acc, story) => {
+	const cover = resolveStoryblokAsset(story.content.coverImage) ?? resolveStoryblokAsset(story.content.bannerImage);
+	if (!cover) return acc;
+
+	acc.push({
+		cover,
+		alt: `${story.content.name} cover`,
+		title: story.content.name,
+		href: `/novels/${story.slug}`,
+	});
+
+	return acc;
+}, []);
+
+const series = storyblokSeries.length > 0 ? storyblokSeries : fallbackSeries;
+---
+
+<BaseLayout title="Curry Muncher Translations | Series">
+	<div class="mx-4 pb-12 pt-8 sm:mx-6 sm:pt-10 lg:mx-24 2xl:mx-48">
+		<div class="mx-auto flex w-full flex-col gap-8 sm:gap-10">
+			<SeriesHeader />
+			<SeriesGrid series={series} layout="boxed" />
+		</div>
+	</div>
+</BaseLayout>

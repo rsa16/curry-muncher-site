@@ -1,0 +1,465 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import { storyblokEditable, renderRichText } from '@storyblok/astro';
+import NovelMetadataItem from './NovelMetadataItem.astro';
+import NovelVolumeGrid from './NovelVolumeGrid.astro';
+import {
+	asEditableBlok,
+	resolveStoryblokAsset,
+	resolveStoryblokLink,
+	type NovelContent,
+	type NovelVolumeCardData,
+	type VolumeStory,
+} from '@lib/storyblok-novels';
+
+interface Props {
+	blok: NovelContent;
+	novelSlug: string;
+	volumes: NovelVolumeCardData[];
+	volumeStories?: VolumeStory[];
+}
+
+const { blok, novelSlug, volumes, volumeStories = [] } = Astro.props as Props;
+
+const allIllustrations = volumeStories.flatMap((vol) =>
+	(vol.content.illustrations ?? []).map((img) => ({
+		url: img.filename || '',
+		volume: vol.content.displayName,
+		volumeNumber: vol.content.volumeNumber
+	}))
+).filter((img) => img.url);
+
+const volumeCredits = volumeStories
+	.filter((vol) => vol.content.credits)
+	.map((vol) => ({
+		volume: vol.content.displayName,
+		volumeNumber: vol.content.volumeNumber,
+		credits: vol.content.credits
+	}));
+const heroImage = resolveStoryblokAsset(blok.bannerImage) ?? resolveStoryblokAsset(blok.coverImage);
+const coverImage = resolveStoryblokAsset(blok.coverImage) ?? heroImage;
+const quickLinks = [
+	{ label: 'Raws', href: resolveStoryblokLink(blok.raws) },
+	{ label: 'NovelUpdates', href: resolveStoryblokLink(blok.novelupdates) },
+].filter((item): item is { label: string; href: string } => Boolean(item.href));
+const epubLink = resolveStoryblokLink(blok.epubs);
+const hasEpubLink = Boolean(epubLink);
+
+const statusLabel = blok.status
+	.split('-')
+	.map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+	.join(' ');
+
+const metadata = [
+	{ label: 'Author', value: blok.author },
+	{ label: 'Artist', value: blok.illustrator },
+	{ label: 'Status', value: statusLabel },
+	{ label: 'Volumes', value: String(volumes.length) },
+];
+---
+
+<section {...storyblokEditable(asEditableBlok(blok))} class="relative overflow-hidden" data-novel-shell>
+	<div class="hero-bg absolute w-full overflow-hidden" aria-hidden="true" data-hero-bg>
+		{heroImage ? <Image inferSize={true} src={heroImage} class="h-full w-full -translate-y-[20%] object-cover" alt="" data-hero-bg-image /> : null}
+		<div class="absolute inset-0 bg-bg/70"></div>
+		<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(21,24,29,0)_0%,rgba(21,24,29,0.63)_45%,var(--color-bg)_70%)]"></div>
+		<div class="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"></div>
+	</div>
+
+	<div class="relative mx-auto w-full max-w-none space-y-3 px-3 pb-8 pt-4 sm:max-w-[70vw] sm:px-8 sm:pb-12 sm:pt-8">
+		<article class="overflow-hidden rounded-[15px] bg-[rgba(255,255,255,0.12)] shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-[15px]">
+			<header class="relative mx-3 mb-1 mt-4 h-[22vh] overflow-hidden rounded-[15px] shadow-[0_10px_32px_rgba(0,0,0,0.25)] sm:mx-6 sm:mt-6 sm:h-[18vh]">
+				<div class="absolute inset-0 overflow-hidden" data-banner-bg-shell aria-hidden="true">
+					{heroImage ? <Image inferSize={true} src={heroImage} class="absolute max-w-full -translate-y-1/2" alt="" aria-hidden="true" data-banner-bg-image /> : null}
+				</div>
+				<div class="absolute inset-0 bg-[#A3C8FF]/20"></div>
+				<div class="absolute inset-0 bg-[linear-gradient(90deg,#2E5566_0%,rgba(46,85,102,0.40)_42%,rgba(46,85,102,0)_100%)]"></div>
+
+				<div class="relative flex h-full flex-col justify-between px-4 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4">
+					<nav aria-label="Breadcrumb" class="min-w-0">
+						<ol class="flex flex-wrap items-center justify-start gap-1 text-[11px] text-white/50 sm:text-[13px]">
+							<li><a href="/novels" class="transition hover:text-white">Series</a></li>
+							<li class="text-white/55">/</li>
+							<li class="truncate text-white">{blok.name}</li>
+						</ol>
+					</nav>
+
+					<div class="flex flex-col gap-1">
+						<div class="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs">
+							<span class="rounded-full bg-white/20 px-2 py-0.5 font-light lowercase tracking-wide text-white">{blok.status}</span>
+							<span class="text-white/85">• {volumes.length} Volume(s)</span>
+						</div>
+						<h1 class="max-w-[640px] text-[24px] font-semibold uppercase leading-[1.15] tracking-[0.02em] text-white sm:text-[30px] sm:leading-[1.2]">{blok.name}</h1>
+					</div>
+				</div>
+			</header>
+
+			<div class="relative flex flex-col gap-5 px-4 py-5 sm:h-[40vh] sm:flex-row sm:gap-6 sm:px-6 sm:pb-7 sm:pt-6 2xl:h-[60vh]">
+				<div class="mx-auto w-full max-w-[260px] sm:mx-0 sm:h-full sm:w-auto sm:max-w-none sm:flex-none">
+					<div class="aspect-[564/808] overflow-hidden rounded-[15px] border border-white/20 shadow-[0_11px_45px_rgba(0,0,0,0.3)] sm:h-full sm:aspect-auto">
+						{coverImage ? (
+							<Image src={coverImage} width={564} height={808} alt={`Cover illustration for ${blok.name}`} class="h-full w-full object-cover sm:w-auto" />
+						) : (
+							<div class="flex h-full w-full items-center justify-center bg-[#1b212b] text-white/55">Cover pending</div>
+						)}
+					</div>
+				</div>
+
+				<div class="flex min-h-0 flex-1 flex-col gap-5 pb-1 pt-0">
+					<div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+						<div class="flex w-full flex-1 flex-wrap gap-[11px]">
+							{metadata.map((item) => (
+								<NovelMetadataItem label={item.label} value={item.value} />
+							))}
+						</div>
+
+						<span class="hidden h-full bg-white/20 sm:mx-6 sm:block"></span>
+
+						{quickLinks.length > 0 && (
+							<div class="flex w-full flex-col gap-2 sm:flex-1 sm:justify-end">
+								<p class="text-sm font-semibold text-white">Quicklinks</p>
+								<div class="flex flex-wrap gap-2">
+									{quickLinks.map((item) => (
+										<a href={item.href} target="_blank" rel="noreferrer" class="inline-flex min-h-[30px] items-center rounded-[15px] bg-white/16 px-5 py-[5px] text-[16px] font-light leading-[1.249] text-white transition hover:bg-white/25">
+											{item.label}
+										</a>
+									))}
+								</div>
+							</div>
+						)}
+					</div>
+
+					<div class="max-w-3xl min-h-0 overflow-hidden border-l-0 pl-0 sm:flex-1 sm:border-l-2 sm:border-white/20 sm:pl-5">
+						<div
+							data-synopsis-scroll
+							class="flex overflow-visible pr-0 sm:h-full sm:items-center sm:overflow-y-auto sm:pr-3 [scrollbar-gutter:stable]"
+							style="--synopsis-top-fade: 0px; --synopsis-bottom-fade: 18px; -webkit-mask-image: linear-gradient(to bottom, transparent 0, black var(--synopsis-top-fade), black calc(100% - var(--synopsis-bottom-fade)), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, black var(--synopsis-top-fade), black calc(100% - var(--synopsis-bottom-fade)), transparent 100%);"
+						>
+							<p class="text-[16px] leading-[1.5] text-[#bfc2c5] sm:h-full sm:text-[18px] sm:leading-[1.46]">{blok.synopsis}</p>
+						</div>
+					</div>
+
+					<div class="flex flex-wrap items-center gap-2.5">
+						<a
+							href={epubLink ?? '#'}
+							target={hasEpubLink ? '_blank' : undefined}
+							rel={hasEpubLink ? 'noreferrer' : undefined}
+							aria-disabled={!hasEpubLink}
+							tabindex={hasEpubLink ? undefined : -1}
+							class:list={[
+								'inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] px-5 text-[16px] font-medium text-white transition sm:w-auto',
+								hasEpubLink
+									? 'bg-[rgba(67,124,255,0.4)] hover:bg-[rgba(67,124,255,0.56)]'
+									: 'cursor-not-allowed bg-white/15 text-white/45 pointer-events-none'
+							]}
+						>
+							<Icon name="lucide:download" class="size-5" />
+							<span>EPUBs/PDFs</span>
+						</a>
+
+						<a href={volumes[0]?.href ?? '#'} class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] bg-white/20 px-5 text-[16px] font-medium text-white transition hover:bg-white/30 sm:w-auto">
+							<Icon name="lucide:book-open" class="size-5" />
+							<span>Read</span>
+						</a>
+
+						<div class="flex w-full flex-wrap gap-1 sm:flex-1 sm:justify-end">
+							<button
+								type="button"
+								data-novel-action="gallery"
+								class="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white/20 text-[16px] font-medium text-white transition hover:bg-white/30"
+								aria-label="Open gallery"
+							>
+								<Icon name="lucide:images" class="size-5" />
+							</button>
+							<button
+								type="button"
+								data-novel-action="staff"
+								class="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white/20 text-[16px] font-medium text-white transition hover:bg-white/30"
+								aria-label="Open staff"
+							>
+								<Icon name="lucide:users-round" class="size-5" />
+							</button>
+							<a
+								href={`/error-report?series=${novelSlug}`}
+								class="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#842b2b] text-[16px] font-medium text-white transition hover:bg-[#a33a3a]"
+								aria-label="Report an error for this series"
+							>
+								<Icon name="lucide:triangle-alert" class="size-5" />
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+
+		<NovelVolumeGrid volumes={volumes} />
+	</div>
+
+	{allIllustrations.length > 0 ? (
+		<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-gallery-modal>
+			<div class="w-full max-w-4xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-gallery-panel>
+				<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
+					<h2 class="text-[20px] font-semibold text-white">Gallery</h2>
+					<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-gallery-close>Close</button>
+				</div>
+				<div class="flex-1 overflow-y-auto pr-3">
+					<div class="grid grid-cols-2 gap-4 p-6">
+						{allIllustrations.map((img) => (
+							<button 
+								type="button"
+								data-gallery-image={img.url}
+								class="group relative overflow-hidden rounded-[12px] bg-[#1a1e27] cursor-pointer aspect-video"
+							>
+								<Image src={img.url} alt={`${img.volume} illustration`} width={600} height={400} class="h-full w-full object-cover transition group-hover:scale-110" />
+								<div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 to-transparent opacity-0 transition group-hover:opacity-100">
+									<div class="p-3 text-[12px] text-white">
+										<p class="font-semibold">{img.volume}</p>
+									</div>
+								</div>
+							</button>
+						))}
+					</div>
+				</div>
+			</div>
+		</div>
+	) : null}
+
+	{allIllustrations.length > 0 ? (
+		<div class="fixed top-16 left-0 right-0 bottom-0 z-[90] hidden items-center justify-center bg-black/0 opacity-0 transition-[opacity,background-color] duration-220 ease-out" data-gallery-zoom-modal>
+			<div class="relative w-full h-full flex items-center justify-center" data-gallery-zoom-content>
+				<button type="button" class="absolute top-4 right-4 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white transition hover:bg-white/30" data-gallery-zoom-close aria-label="Close zoom">
+					<span class="text-[24px] leading-none">×</span>
+				</button>
+				<img src="" alt="Zoomed illustration" class="max-w-[95vw] max-h-[95vh] object-contain transition-[transform,opacity] duration-220 ease-out" data-gallery-zoom-image />
+			</div>
+		</div>
+	) : null}
+
+	{volumeCredits.length > 0 ? (
+		<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-staff-modal>
+			<div class="w-full max-w-2xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-staff-panel>
+				<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
+					<h2 class="text-[20px] font-semibold text-white">Staff &amp; Credits</h2>
+					<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-staff-close>Close</button>
+				</div>
+				<div class="flex-1 overflow-y-auto pr-3">
+					<div class="space-y-6 p-6">
+						{volumeCredits.map((vol) => (
+							<div class="space-y-2">
+								<h3 class="text-[16px] font-semibold text-white">{vol.volume}</h3>
+								<div class="text-[14px] leading-[1.6] text-white/80" set:html={renderRichText(vol.credits as any)} />
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+		</div>
+	) : null}
+</section>
+
+<script is:inline>
+	const setupGalleryPopup = () => {
+		const galleryButton = document.querySelector('[data-novel-action="gallery"]');
+		const galleryModal = document.querySelector('[data-gallery-modal]');
+		const galleryPanel = document.querySelector('[data-gallery-panel]');
+		if (!galleryButton || !galleryModal) return;
+
+		const closeButtons = galleryModal.querySelectorAll('[data-gallery-close]');
+		let isClosing = false;
+
+		const animateOpen = () => {
+			galleryModal.style.opacity = '1';
+			galleryModal.style.backgroundColor = 'rgba(0, 0, 0, 0.55)';
+			galleryModal.style.backdropFilter = 'blur(2px)';
+			galleryModal.style.webkitBackdropFilter = 'blur(2px)';
+			if (galleryPanel) {
+				galleryPanel.style.opacity = '1';
+				galleryPanel.style.transform = 'translateY(0) scale(1)';
+			}
+		};
+
+		const animateClose = () => {
+			galleryModal.style.opacity = '0';
+			galleryModal.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+			galleryModal.style.backdropFilter = 'blur(0)';
+			galleryModal.style.webkitBackdropFilter = 'blur(0)';
+			if (galleryPanel) {
+				galleryPanel.style.opacity = '0';
+				galleryPanel.style.transform = 'translateY(8px) scale(0.985)';
+			}
+		};
+
+		const openModal = () => {
+			if (isClosing) return;
+			galleryModal.classList.remove('hidden');
+			galleryModal.classList.add('flex');
+			requestAnimationFrame(animateOpen);
+		};
+
+		const closeModal = () => {
+			if (isClosing || galleryModal.classList.contains('hidden')) return;
+			isClosing = true;
+			animateClose();
+			window.setTimeout(() => {
+				galleryModal.classList.add('hidden');
+				galleryModal.classList.remove('flex');
+				isClosing = false;
+			}, 220);
+		};
+
+		galleryButton.addEventListener('click', openModal);
+		closeButtons.forEach((button) => button.addEventListener('click', closeModal));
+
+		galleryModal.addEventListener('click', (event) => {
+			if (event.target === galleryModal) {
+				closeModal();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !galleryModal.classList.contains('hidden')) {
+				closeModal();
+			}
+		});
+
+		// Setup zoom functionality
+		const zoomModal = document.querySelector('[data-gallery-zoom-modal]');
+		const zoomImage = document.querySelector('[data-gallery-zoom-image]');
+		const zoomCloseButton = document.querySelector('[data-gallery-zoom-close]');
+		if (!zoomModal || !zoomImage) return;
+
+		const imageButtons = galleryModal.querySelectorAll('[data-gallery-image]');
+		let isZoomClosing = false;
+
+		const openZoom = (imageUrl) => {
+			if (isZoomClosing) return;
+			zoomImage.src = imageUrl;
+			zoomImage.style.transform = 'scale(0.94)';
+			zoomImage.style.opacity = '0';
+			zoomModal.classList.remove('hidden');
+			zoomModal.classList.add('flex');
+			requestAnimationFrame(() => {
+				zoomModal.style.opacity = '1';
+				zoomModal.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+				zoomImage.style.transform = 'scale(1)';
+				zoomImage.style.opacity = '1';
+			});
+		};
+
+		const closeZoom = () => {
+			if (isZoomClosing || zoomModal.classList.contains('hidden')) return;
+			isZoomClosing = true;
+			zoomModal.style.opacity = '0';
+			zoomModal.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+			zoomImage.style.transform = 'scale(0.96)';
+			zoomImage.style.opacity = '0';
+			window.setTimeout(() => {
+				zoomModal.classList.add('hidden');
+				zoomModal.classList.remove('flex');
+				zoomImage.src = '';
+				isZoomClosing = false;
+			}, 220);
+		};
+
+		imageButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const imageUrl = button.getAttribute('data-gallery-image');
+				if (imageUrl) openZoom(imageUrl);
+			});
+		});
+
+		if (zoomCloseButton) {
+			zoomCloseButton.addEventListener('click', (event) => {
+				event.stopPropagation();
+				closeZoom();
+			});
+		}
+
+		zoomModal.addEventListener('click', (event) => {
+			const zoomContent = document.querySelector('[data-gallery-zoom-content]');
+			if (event.target === zoomModal || (zoomContent && !zoomContent.contains(event.target))) {
+				closeZoom();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !zoomModal.classList.contains('hidden')) {
+				closeZoom();
+			}
+		});
+	};
+
+	const setupStaffPopup = () => {
+		const staffButton = document.querySelector('[data-novel-action="staff"]');
+		const staffModal = document.querySelector('[data-staff-modal]');
+		const staffPanel = document.querySelector('[data-staff-panel]');
+		if (!staffButton || !staffModal) return;
+
+		const closeButtons = staffModal.querySelectorAll('[data-staff-close]');
+		let isClosing = false;
+
+		const animateOpen = () => {
+			staffModal.style.opacity = '1';
+			staffModal.style.backgroundColor = 'rgba(0, 0, 0, 0.55)';
+			staffModal.style.backdropFilter = 'blur(2px)';
+			staffModal.style.webkitBackdropFilter = 'blur(2px)';
+			if (staffPanel) {
+				staffPanel.style.opacity = '1';
+				staffPanel.style.transform = 'translateY(0) scale(1)';
+			}
+		};
+
+		const animateClose = () => {
+			staffModal.style.opacity = '0';
+			staffModal.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+			staffModal.style.backdropFilter = 'blur(0)';
+			staffModal.style.webkitBackdropFilter = 'blur(0)';
+			if (staffPanel) {
+				staffPanel.style.opacity = '0';
+				staffPanel.style.transform = 'translateY(8px) scale(0.985)';
+			}
+		};
+
+		const openModal = () => {
+			if (isClosing) return;
+			staffModal.classList.remove('hidden');
+			staffModal.classList.add('flex');
+			requestAnimationFrame(animateOpen);
+		};
+
+		const closeModal = () => {
+			if (isClosing || staffModal.classList.contains('hidden')) return;
+			isClosing = true;
+			animateClose();
+			window.setTimeout(() => {
+				staffModal.classList.add('hidden');
+				staffModal.classList.remove('flex');
+				isClosing = false;
+			}, 220);
+		};
+
+		staffButton.addEventListener('click', openModal);
+		closeButtons.forEach((button) => button.addEventListener('click', closeModal));
+
+		staffModal.addEventListener('click', (event) => {
+			if (event.target === staffModal) {
+				closeModal();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !staffModal.classList.contains('hidden')) {
+				closeModal();
+			}
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', setupGalleryPopup, { once: true });
+		document.addEventListener('DOMContentLoaded', setupStaffPopup, { once: true });
+	} else {
+		setupGalleryPopup();
+		setupStaffPopup();
+	}
+</script>

@@ -6,13 +6,14 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev --host",
+    "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.101",
+    "@storyblok/astro": "^9.0.3",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.3",
     "astro-icon": "^1.1.5",

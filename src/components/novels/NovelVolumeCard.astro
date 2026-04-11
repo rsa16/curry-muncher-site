@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+    label: string;
+    href: string;
+    image?: string;
+    lastUpdate: string;
+}
+
+const { label, href, image, lastUpdate } = Astro.props as Props;
+---
+
+<article class="group relative overflow-hidden rounded-[15px] bg-white/15 p-[10px]">
+    <a href={href} class="block">
+        <div class="relative overflow-hidden rounded-[15px]">
+            {image ? (
+                <Image
+                    src={image}
+                    inferSize={true}
+                    alt={`${label} cover`}
+                    class="h-full w-full object-cover transition duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                />
+            ) : (
+                <div class="flex h-full min-h-[620px] items-center justify-center bg-[#1f2730] text-center text-sm text-white/60">
+                    Cover pending
+                </div>
+            )}
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#202833cc]"></div>
+            <p class="absolute bottom-[10px] left-[18px] text-[24px] font-semibold uppercase leading-[1.46] text-white">{label}</p>
+        </div>
+    </a>
+
+    <div class="flex items-center justify-between px-2 pt-2 text-[14px] text-[#c2c2c2]">
+        <p><span class="italic">Last Update</span>: {lastUpdate}</p>
+    </div>
+</article>

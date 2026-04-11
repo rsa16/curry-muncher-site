@@ -1,0 +1,42 @@
+---
+import type { Series } from "@data/home";
+import SeriesCard from "@components/novels/SeriesCard.astro";
+
+interface Props {
+	series: Series[];
+	layout?: "hero" | "boxed";
+	showPlaceholder?: boolean;
+}
+
+const { series, layout = "hero", showPlaceholder = false } = Astro.props as Props;
+
+const gridClasses =
+	layout === "boxed"
+		? "grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
+		: "grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3";
+
+const cardClasses =
+	layout === "boxed"
+		? "aspect-[261/373] w-full"
+		: "aspect-[3/4] w-full max-w-[250px] sm:max-w-none sm:aspect-[5/7]";
+---
+
+<div
+	class:list={[
+		"series",
+		layout === "boxed"
+			? "mx-auto w-full rounded-[24px] bg-[#2c1f1f] p-4 sm:p-5"
+			: "relative mx-3 sm:mx-6 md:mx-12 lg:mx-40",
+	]}
+>
+	<div class:list={[gridClasses, layout === "boxed" ? "justify-items-stretch" : "justify-items-center"]}>
+		{series.map((item) => (
+			<SeriesCard {...item} class={cardClasses} />
+		))}
+		{showPlaceholder && series.length % 2 === 1 && (
+			<article class="relative flex aspect-[3/4] w-full max-w-[250px] items-center justify-center rounded-[20px] border border-dashed border-white/20 bg-white/5 text-center text-white/80 sm:hidden">
+				<span class="text-lg font-semibold tracking-wide">More to come</span>
+			</article>
+		)}
+	</div>
+</div>

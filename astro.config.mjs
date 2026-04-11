@@ -1,11 +1,29 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
+import { storyblok } from '@storyblok/astro';
+import { loadEnv } from 'vite';
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 
+const env = loadEnv("", process.cwd(), 'STORYBLOK');
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon()],
+  integrations: [
+    icon(),
+    storyblok({
+      accessToken: env.STORYBLOK_TOKEN,
+      components: {
+        novel: "components/novels/Novel",
+        volume: "components/novels/Volume",
+        chapter: "components/novels/Chapter",
+        download_nestable: "components/novels/DownloadNestable"
+      },
+      apiOptions: {
+        region: 'us',
+      }
+    })
+  ],
   vite: {
     plugins: [tailwindcss()],
     server: {
@@ -32,5 +50,12 @@ export default defineConfig({
       name: "Merriweather",
       cssVariable: "--font-merriweather"
     }
-  ]
+  ],
+  image: {
+    remotePatterns: [{
+      protocol: "https",
+      hostname: "*.storyblok.com",
+      pathname: "/**"
+    }]
+  }
 });

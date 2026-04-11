@@ -1,19 +1,24 @@
 ---
-import type { Chapter } from "@data/home";
+type ChapterCard = {
+	series: string;
+	chapter: string;
+	title: string;
+	href: string;
+};
 
-const { chapters } = Astro.props as { chapters: Chapter[] };
+const { chapters } = Astro.props as { chapters: ChapterCard[] };
 ---
 
 <section class="section w-full max-w-full">
 	<h2 class="text-3xl font-semibold text-white md:text-2xl">Latest Chapters</h2>
 	<div class="chapter-grid mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-		{chapters.map((entry: Chapter) => (
-			<article class="chapter-card group relative min-w-0 cursor-pointer rounded-2xl bg-white/10 p-4 text-white shadow-lg backdrop-blur transition duration-200 hover:-translate-y-1 hover:bg-white/20 hover:shadow-xl">
-				<p class="chapter-series text-base font-semibold uppercase tracking-wide text-sky-300/90 sm:text-xs">{entry.series}</p>
+		{chapters.map((entry: ChapterCard) => (
+			<a href={entry.href} class="chapter-card group relative block min-w-0 rounded-2xl bg-white/10 p-4 text-white shadow-lg backdrop-blur transition duration-200 hover:-translate-y-1 hover:bg-white/20 hover:shadow-xl">
+				<p class="chapter-series text-base font-semibold uppercase truncate max-w-[90%] tracking-wide text-sky-300/90 sm:text-xs">{entry.series}</p>
 				<p class="chapter-number mt-1 text-md font-medium text-white/80 sm:text-sm">{entry.chapter}</p>
 				<p class="chapter-title mt-1 truncate text-xl font-medium text-white sm:text-lg">{entry.title}</p>
 				<span class="chapter-arrow pointer-events-none absolute right-4 top-4 text-white/70 transition group-hover:translate-x-0.5 group-hover:text-white">-&gt;</span>
-			</article>
+			</a>
 		))}
 	</div>
 </section>

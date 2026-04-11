@@ -4,6 +4,7 @@ import type { Series } from "@data/home";
 import { Image } from "astro:assets";
 import curryBg from "@assets/curry-bg.png";
 import kariiChan from "@assets/staff-pfps/karii-chan.png";
+import SeriesGrid from "@components/novels/SeriesGrid.astro";
 
 const { series } = Astro.props as { series: Series[] }
 ---
@@ -29,22 +30,6 @@ const { series } = Astro.props as { series: Series[] }
 		</div>
 	</header>
 
-	<div class="series relative mx-3 grid grid-cols-2 gap-4 sm:gap-6 sm:mx-6 sm:grid-cols-2 md:mx-12 lg:mx-72 lg:grid-cols-3">
-		{series.map((item) => (
-			<article class="series-card group relative z-12 mx-auto w-full max-w-[250px] cursor-pointer rounded-2xl aspect-[3/4] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.45)] sm:mx-0 sm:max-w-none sm:aspect-[5/7]">
-				<Image src={item.cover} alt={item.alt} class="absolute inset-0 w-full h-full object-cover transition duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]" />
-				<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.35)_55%,rgba(0,0,0,0.75)_100%)] transition duration-500 ease-out group-hover:opacity-90" />
-				<div class="absolute -inset-12 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),rgba(255,255,255,0)_60%)] opacity-0 transition duration-700 ease-out group-hover:opacity-100" />
-				<p class="absolute bottom-0 left-0 right-0 px-4 pb-4 text-white text-xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] transition duration-500 ease-out group-hover:translate-y-[-6px]">
-					{item.title}
-				</p>
-			</article>
-		))}
-		{series.length % 2 === 1 && (
-			<article class="series-card relative z-12 mx-auto flex w-full max-w-[250px] items-center justify-center rounded-2xl border border-white/20 border-dashed bg-white/5 aspect-[3/4] text-center text-white/80 sm:hidden">
-				<span class="text-lg font-semibold tracking-wide">More to come</span>
-			</article>
-		)}
-	</div>
+	<SeriesGrid series={series} layout="hero" showPlaceholder />
   </div>
 </section>

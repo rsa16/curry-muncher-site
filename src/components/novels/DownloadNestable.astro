@@ -1,0 +1,19 @@
+---
+import { resolveStoryblokLink, type VolumeDownloadBlock } from '@lib/storyblok-novels';
+
+interface Props {
+	blok: VolumeDownloadBlock;
+}
+
+const { blok } = Astro.props as Props;
+const href = resolveStoryblokLink(blok.link);
+const isExternal = typeof href === 'string' && /^(https?:|mailto:)/.test(href);
+---
+
+{href ? (
+	<a href={href} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noreferrer' : undefined}>
+		{blok.label}
+	</a>
+) : (
+	<div>{blok.label}</div>
+)}

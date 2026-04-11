@@ -1,0 +1,76 @@
+---
+import { storyblokEditable } from '@storyblok/astro';
+import { Image } from 'astro:assets';
+import VolumeHero from './VolumeHero.astro';
+import VolumeSidebar from './VolumeSidebar.astro';
+import VolumeTabs from './VolumeTabs.astro';
+import {
+	asEditableBlok,
+	resolveStoryblokAsset,
+	type VolumeContent,
+	type VolumeChapterLink,
+} from '@lib/storyblok-novels';
+
+interface Props {
+	blok: VolumeContent;
+	novelSlug: string;
+	volumeSlug?: string;
+	novelTitle: string;
+	createdDate: string;
+	updatedDate: string;
+	backgroundImage?: string;
+	status: string;
+	volumeCount: number;
+	chapters: VolumeChapterLink[];
+}
+
+const { blok, novelSlug, volumeSlug, novelTitle, createdDate, updatedDate, backgroundImage, status, volumeCount, chapters } = Astro.props as Props;
+const coverImage = resolveStoryblokAsset(blok.coverImage);
+const illustrationAssets = (blok.illustrations ?? [])
+	.map((asset) => resolveStoryblokAsset(asset))
+	.filter((asset): asset is string => Boolean(asset));
+const changelogEntries = (blok.changelog ?? [])
+	.filter((entry) => Boolean(entry.version) && Boolean(entry.shortTitle));
+---
+
+<section {...storyblokEditable(asEditableBlok(blok))} class="relative overflow-hidden">
+	<div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+		{backgroundImage ? <Image inferSize={true} src={backgroundImage} alt="" class="h-full w-full object-cover object-[center_20%]" /> : null}
+		<div class="absolute inset-0 bg-bg/70"></div>
+		<div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(21,24,29,0)_0%,rgba(21,24,29,0.63)_45%,var(--color-bg)_70%)]"></div>
+		<div class="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"></div>
+	</div>
+
+	<div class="relative mx-auto w-full max-w-[883px] px-4 py-6 sm:px-6 sm:py-8">
+		<div class="space-y-4">
+			<VolumeHero
+				backgroundImage={backgroundImage}
+				status={status}
+				volumeCount={volumeCount}
+				volumeNumber={blok.volumeNumber}
+				volumeTitle={blok.displayName}
+				novelSlug={novelSlug}
+				novelTitle={novelTitle}
+			/>
+
+			<div class="flex flex-col gap-4 xl:flex-row xl:items-start">
+				<VolumeSidebar
+					blok={blok}
+					coverImage={coverImage}
+					volumeNumber={blok.volumeNumber}
+					createdDate={createdDate}
+					updatedDate={updatedDate}
+					firstChapterHref={chapters[0]?.href}
+					novelSlug={novelSlug}
+					volumeSlug={volumeSlug}
+				/>
+				<VolumeTabs
+					blok={blok}
+					chapters={chapters}
+					illustrationAssets={illustrationAssets}
+					changelogEntries={changelogEntries}
+				/>
+			</div>
+		</div>
+	</div>
+</section>

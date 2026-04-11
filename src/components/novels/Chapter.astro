@@ -1,0 +1,56 @@
+---
+import { storyblokEditable, renderRichText } from '@storyblok/astro';
+import { asEditableBlok, type ChapterContent } from '@lib/storyblok-novels';
+
+interface Props {
+    blok: ChapterContent;
+    novelSlug: string;
+    novelTitle: string;
+    volumeSlug: string;
+    volumeTitle: string;
+}
+
+const { blok, novelSlug, novelTitle, volumeSlug, volumeTitle } = Astro.props as Props;
+const renderedRichText = renderRichText(blok.content as any);
+
+const rewriteChapterAnchors = (html: string): string => {
+    const currentPathname = Astro.url.pathname;
+    const currentChapterSlug = currentPathname.split('/').filter(Boolean).at(-1) ?? '';
+    const mergedChapterPath = `/novels/${novelSlug}/${volumeSlug}-${currentChapterSlug}`;
+
+    return html.replace(/href=("|')(.*?)\1/g, (_match, quote: string, href: string) => {
+        try {
+            const resolved = new URL(href, Astro.url);
+
+            const isSameChapterPath =
+                resolved.origin === Astro.url.origin
+                && (resolved.pathname === currentPathname || resolved.pathname === mergedChapterPath);
+
+            if (isSameChapterPath && resolved.hash) {
+                return `href=${quote}${resolved.hash}${quote}`;
+            }
+        } catch {
+            return `href=${quote}${href}${quote}`;
+        }
+
+        return `href=${quote}${href}${quote}`;
+    });
+};
+
+const rewrittenRichText = rewriteChapterAnchors(renderedRichText);
+---
+
+<div class="container mobileTransparent">
+    <main class="transparent">
+        <article {...storyblokEditable(asEditableBlok(blok))}>
+            <h2 class="novelName"><a href={`/novels/${novelSlug}`}>{novelTitle}</a> - <span>{volumeTitle}</span></h2>
+            <h2>{blok.displayName}</h2>
+            <h1>{blok.chapterTitle}</h1>
+            <h3>{blok.postDate}</h3>
+            <hr>
+            <div class="content" set:html={rewrittenRichText}></div>
+        </article>
+    </main>
+    <div class="spacer">
+    </div>
+</div>

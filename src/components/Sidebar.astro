@@ -3,15 +3,19 @@ import { Icon } from "astro-icon/components";
 
 const navItems = [
 	{ label: "Home", href: "/", icon: "lucide:home", position: "top" },
-	{ label: "Series", href: "/series", icon:"lucide:library", position: "top"},
+	{ label: "Series", href: "/novels", icon:"lucide:library", position: "top"},
 	{ label: "Staff", href: "/staff", icon:"lucide:users", position: "top"},
 	{ label: "About", href: "/about", icon:"lucide:info", position: "top"},
 	
 	{ label: "Contact Us", href: "/contact-us", icon: "lucide:mail", position: "bottom" },
+	{ label: "Report Error", href: "/error-report", icon: "lucide:triangle-alert", position: "bottom" },
 	{ label: "FAQ", href: "/faq", icon: "lucide:circle-question-mark", position: "bottom" },
 ];
 
-const isActive = (href: string) => Astro.url.pathname === href;
+const isActive = (href: string) => {
+  if (href === "/") return Astro.url.pathname === "/";
+  return Astro.url.pathname.startsWith(href);
+};
 ---
 
 <aside

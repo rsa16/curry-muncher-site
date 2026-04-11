@@ -1,0 +1,374 @@
+---
+import { renderRichText, storyblokEditable, useStoryblokApi } from '@storyblok/astro';
+import { Font } from "astro:assets";
+import {
+    asEditableBlok,
+    buildChapterRoute,
+    formatLongDate,
+    getNovelSlug,
+    toPublicChapterSlug,
+    getVolumeSlug,
+    type ChapterStory,
+    type NovelStory,
+    type VolumeStory,
+} from '@lib/storyblok-novels';
+
+export async function getStaticPaths() {
+    const storyblokApi = useStoryblokApi();
+    const chapters = await storyblokApi.getAll('cdn/stories', {
+        content_type: 'Chapter',
+        starts_with: 'novels/',
+        version: 'published'
+    }) as ChapterStory[];
+
+    const staticPaths = chapters.map((chapter) => ({
+        params: {
+            name: getNovelSlug(chapter.full_slug),
+            volume: getVolumeSlug(chapter.full_slug),
+            chapterSlug: toPublicChapterSlug(getVolumeSlug(chapter.full_slug), chapter.slug)
+        },
+        props: {
+            storyblokChapterSlug: chapter.slug
+        }
+    }));
+
+    return staticPaths;
+}
+
+const { name, volume } = Astro.params;
+const { storyblokChapterSlug } = Astro.props;
+const storyblokApi = useStoryblokApi();
+
+const [{ data: novelResponse }, { data: volumeResponse }, { data: chapterResponse }] = await Promise.all([
+    storyblokApi.get(`cdn/stories/novels/${name}`, { version: 'published' }),
+    storyblokApi.get(`cdn/stories/novels/${name}/volumes/${volume}`, { version: 'published' }),
+    storyblokApi.get(`cdn/stories/novels/${name}/volumes/${volume}/chapters/${storyblokChapterSlug}`, { version: 'published' })
+]);
+
+const novelStory = novelResponse.story as NovelStory;
+const volumeStory = volumeResponse.story as VolumeStory;
+const chapterStory = chapterResponse.story as ChapterStory;
+
+const volumeChapters = (await storyblokApi.getAll('cdn/stories', {
+    content_type: 'Chapter',
+    starts_with: `novels/${name}/volumes/${volume}/chapters`,
+    version: 'published',
+    sort_by: 'content.chapterIndex:asc'
+})) as ChapterStory[];
+
+const chapterIndex = volumeChapters.findIndex((entry) => entry.slug === storyblokChapterSlug);
+const previousChapter = chapterIndex > 0 ? volumeChapters[chapterIndex - 1] : undefined;
+const nextChapter = chapterIndex >= 0 && chapterIndex < volumeChapters.length - 1 ? volumeChapters[chapterIndex + 1] : undefined;
+const currentChapterPublicSlug = toPublicChapterSlug(volume, storyblokChapterSlug);
+
+const previousChapterHref = previousChapter
+    ? buildChapterRoute(name, volume, toPublicChapterSlug(volume, previousChapter.slug))
+    : '';
+const nextChapterHref = nextChapter
+    ? buildChapterRoute(name, volume, toPublicChapterSlug(volume, nextChapter.slug))
+    : '';
+
+const renderedRichText = renderRichText(chapterStory.content.content as any);
+const chapterDate = formatLongDate(chapterStory.content.postDate);
+const pageTitle = `${chapterStory.content.displayName}: ${chapterStory.content.chapterTitle}`;
+
+const rewriteChapterAnchors = (html: string): string => {
+    const publicChapterSlug = toPublicChapterSlug(volume, storyblokChapterSlug);
+    const currentPathname = `/novels/${name}/${volume}/${publicChapterSlug}`;
+    const mergedChapterPath = `/novels/${name}/${volume}-${publicChapterSlug}`;
+    const nestedMergedChapterPath = `/novels/${name}/${volume}/${volume}-${publicChapterSlug}`;
+    const storyblokSlugPath = `/novels/${name}/${volume}/${storyblokChapterSlug}`;
+    const storyblokMergedPath = `/novels/${name}/${volume}/${volume}-${storyblokChapterSlug}`;
+
+    const sameChapterPaths = new Set([
+        currentPathname,
+        mergedChapterPath,
+        nestedMergedChapterPath,
+        storyblokSlugPath,
+        storyblokMergedPath,
+    ]);
+
+    return html.replace(/href=("|')(.*?)\1/g, (_match, quote: string, href: string) => {
+        try {
+            const resolved = new URL(href, `https://reader.local${currentPathname}`);
+
+            const isSameChapterPath = sameChapterPaths.has(resolved.pathname);
+
+            if (isSameChapterPath && resolved.hash) {
+                return `href=${quote}${resolved.hash}${quote}`;
+            }
+        } catch {
+            return `href=${quote}${href}${quote}`;
+        }
+
+        return `href=${quote}${href}${quote}`;
+    });
+};
+
+const rewrittenRichText = rewriteChapterAnchors(renderedRichText);
+
+const tocEntries = volumeChapters.map((entry, index) => ({
+    index: index + 1,
+    slug: toPublicChapterSlug(volume, entry.slug),
+    href: buildChapterRoute(name, volume, toPublicChapterSlug(volume, entry.slug)),
+    label: `${entry.content.displayName}: ${entry.content.chapterTitle}`
+}));
+---
+
+<!DOCTYPE html>
+<html lang="en" class="link dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{pageTitle}</title>
+        <link rel="stylesheet" href="/css/reader.css" type="text/css" />
+        <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+
+        <Font cssVariable="--font-instrument" />
+		<Font cssVariable="--font-poppins" />
+		<Font cssVariable="--font-merriweather" />
+    </head>
+
+    <body
+        data-prev-href={previousChapterHref}
+        data-next-href={nextChapterHref}
+        data-current-slug={currentChapterPublicSlug}
+        data-current-index={chapterIndex}
+        data-chapter-count={volumeChapters.length}
+    >
+        <main id="app">
+            <section id="mainContent">
+                <div class="menu">
+                    <p id="close-btn">Close</p>
+                    <div class="header">
+                        <h1 class="novelTitle">{novelStory.content.name}</h1>
+                        <h3 class="volumeNumber">{volumeStory.content.displayName}</h3>
+                    </div>
+                    <div class="toc">
+                        <h2>Table of Contents:</h2>
+                        <div>
+                            {tocEntries.map((entry) => (
+                                <a href={entry.href} class={entry.slug === currentChapterPublicSlug ? 'select' : ''}>
+                                    <p>{entry.index}</p>
+                                    <span>{entry.label}</span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                    <section class="fullsec">
+                        <div class="menu-sec2">
+                            <div id="width-btn" class="top-btn menu-button">
+                                <p>Contain Width</p>
+                                <iconify-icon icon="fluent:auto-fit-width-20-regular"></iconify-icon>
+                            </div>
+                            <div id="settings-btn" class="top-btn menu-button">
+                                <p>Reader Layout</p>
+                                <iconify-icon icon="solar:settings-bold"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="menu-sec3">
+                            <div class="chapterNav">
+                                <iconify-icon class="back-btn menu-button" icon="fluent-mdl2:back"></iconify-icon>
+                                <iconify-icon class="go-btn menu-button" icon="fluent-mdl2:forward"></iconify-icon>
+                            </div>
+                        </div>
+                        <div id="menuFooter">
+                            <a href="/" id="footerTitle">
+                                <h1>CURRY<span>MUNCHER</span></h1>
+                            </a>
+                            <div id="creditsBtn">
+                                <span></span>
+                                <iconify-icon icon="mdi:heart"></iconify-icon>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="reader">
+                    <div id="progressBar"></div>
+                    <div class="readerContent">
+                        <div>
+                            <article class="readerArticle" {...storyblokEditable(asEditableBlok(chapterStory.content))}>
+                                <header class="chapterHero">
+                                    <h1 class="chapterHeroIndex">{chapterStory.content.displayName}</h1>
+                                    <p class="chapterHeroTitle">{chapterStory.content.chapterTitle}</p>
+                                    <p class="chapterHeroDate">{chapterDate}</p>
+                                </header>
+                                <div class="readerBody" set:html={rewrittenRichText}></div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <div class="navArea">
+                        <div id="navBar">
+                            <div class="genStuff">
+                                <span class="info icon tooltip">
+                                    <iconify-icon icon="ep:info-filled"></iconify-icon>
+                                    <span class="tooltip-text">Press M to toggle</span>
+                                </span>
+                                <span class="icon max hidden tooltip">
+                                    <iconify-icon icon="fluent:arrow-maximize-16-filled"></iconify-icon>
+                                    <span class="tooltip-text">Press N to minify</span>
+                                </span>
+                            </div>
+                            <h3 id="chapterTitle">{chapterStory.content.chapterTitle}</h3>
+                            <div class="fontStuff">
+                                <span id="displaySettings" class="icon">
+                                    <iconify-icon icon="qlementine-icons:font-16"></iconify-icon>
+                                </span>
+                                <span class="icon back-btn">
+                                    <iconify-icon icon="fluent-mdl2:back"></iconify-icon>
+                                </span>
+                                <span class="icon go-btn">
+                                    <iconify-icon icon="fluent-mdl2:forward"></iconify-icon>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="imageContainer">
+                <div id="imageOverlay">
+                    <img width="500" height="700" src="" alt="Expanded chapter illustration" />
+                </div>
+            </section>
+
+            <section class="menuContainer">
+                <div class="menuChild" id="fontMenu">
+                    <div class="menuTop">
+                        <h1>Display Settings</h1>
+                        <iconify-icon class="menuClose-btn" icon="material-symbols:close"></iconify-icon>
+                    </div>
+                    <div class="content">
+                        <div id="themeSelectContainer">
+                            <h3>Theme</h3>
+                            <div id="themeSelect">
+                                <div id="theme-kanin"></div>
+                                <div id="theme-dark"></div>
+                                <div id="theme-light"></div>
+                                <div id="theme-sepia"></div>
+                            </div>
+                        </div>
+                        <div class="numInput">
+                            <h3>Font Size</h3>
+                            <div id="fontSize">
+                                <iconify-icon class="decreaseFont" icon="ic:baseline-minus"></iconify-icon>
+                                <div contenteditable="true">20</div>
+                                <iconify-icon class="increaseFont" icon="ic:baseline-plus"></iconify-icon>
+                            </div>
+                        </div>
+                        <div id="spacing" class="numInput">
+                            <h3>Line Spacing</h3>
+                            <div id="paragraphHeight">
+                                <input type="number" value="1.5" step="0.1" min="1" max="3" />
+                            </div>
+                        </div>
+                        <div id="paragraphSpacing" class="numInput">
+                            <h3>Paragraph Spacing</h3>
+                            <div id="paragraphSpacingControl">
+                                <input type="number" value="12" step="1" min="0" max="48" />
+                            </div>
+                        </div>
+                        <div id="textContainer">
+                            <h3>Text Alignment</h3>
+                            <div id="alignment" class="multiSelect">
+                                <iconify-icon id="align-left" icon="mingcute:align-left-line"></iconify-icon>
+                                <iconify-icon id="align-center" icon="mingcute:align-center-line"></iconify-icon>
+                                <iconify-icon id="align-right" icon="mingcute:align-right-line"></iconify-icon>
+                                <iconify-icon id="align-justify" icon="mingcute:align-justify-line"></iconify-icon>
+                            </div>
+                        </div>
+                        <div id="fontContainer">
+                            <h3>Fonts</h3>
+                            <div id="fonts">
+                                <div id="font-serif" class="menuFont">
+                                    <h1>Aa</h1>
+                                    <span>Serif</span>
+                                </div>
+                                <div id="font-kanin" class="menuFont">
+                                    <h1>Aa</h1>
+                                    <span>Kanin</span>
+                                </div>
+                                <div id="font-arial" class="menuFont">
+                                    <h1>Aa</h1>
+                                    <span>Sans Serif</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="indentContainer">
+                            <h3>Indents</h3>
+                            <label id="indentSwitch" class="switch">
+                                <input type="checkbox" />
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menuChild" id="creditsMenu">
+                    <div class="menuTop">
+                        <h1>Credits</h1>
+                        <iconify-icon class="menuClose-btn" icon="material-symbols:close"></iconify-icon>
+                    </div>
+                    <div class="content">
+                        <p id="discordCredits">Join the <a href="https://discord.com/invite/SzfCeGfMN6" target="_blank" rel="noreferrer">Discord</a> if you want to show appreciation!</p>
+                        <p>This was originally something I made for Kanin Group, ported it for my own site.</p>
+                        <p><span>Frontend/UI:</span> rsa</p>
+                        <h3>Made with &lt;3 by <span>rsa</span>, <span>pulsed</span>, and <span>anth</span></h3>
+                    </div>
+                </div>
+
+                <div class="menuChild" id="advancedMenu">
+                    <div class="menuTop">
+                        <h1>Layout Settings</h1>
+                        <iconify-icon class="menuClose-btn" icon="material-symbols:close"></iconify-icon>
+                    </div>
+                    <div class="content">
+                        <div id="marginContainer">
+                            <h3>Reader Margins (x, y):</h3>
+                            <div id="margin">
+                                <div contenteditable="true">50</div>
+                                <div contenteditable="true">30</div>
+                            </div>
+                        </div>
+                        <div id="progressContainer">
+                            <h3>Progress Bar Position:</h3>
+                            <div>
+                                <div id="progress-top">Top</div>
+                                <div id="progress-bottom">Bottom</div>
+                                <div id="progress-none">None</div>
+                            </div>
+                        </div>
+                        <div id="sidebarContainer">
+                            <h3>Sidebar Position:</h3>
+                            <div>
+                                <div id="sidebar-left">Left</div>
+                                <div id="sidebar-right">Right</div>
+                            </div>
+                        </div>
+                        <div id="widthContainer">
+                            <h3>Fill Width</h3>
+                            <label id="fillSwitch" class="switch">
+                                <input type="checkbox" />
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div id="percentageOptionContainer">
+                            <h3>Use Percentage?</h3>
+                            <label id="percentSwitch" class="switch">
+                                <input type="checkbox" checked />
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div id="constraintContainer">
+                            <h3>Constrain Width (90%)</h3>
+                            <input type="range" value="90" min="50" max="100" step="1" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="/js/reader/reader.js"></script>
+    </body>
+</html>

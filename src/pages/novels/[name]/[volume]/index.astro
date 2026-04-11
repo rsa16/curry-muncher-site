@@ -1,0 +1,87 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Volume from '@components/novels/Volume.astro';
+import {
+	buildChapterRoute,
+	formatShortDate,
+	getNovelSlug,
+	resolveStoryblokAsset,
+	type ChapterStory,
+	type NovelStory,
+	type VolumeChapterLink,
+	type VolumeStory,
+} from '@lib/storyblok-novels';
+
+export async function getStaticPaths() {
+	const storyblokApi = useStoryblokApi();
+	const volumes = await storyblokApi.getAll('cdn/stories', {
+		content_type: 'Volume',
+		starts_with: 'novels/',
+		version: 'published'
+	}) as VolumeStory[];
+
+	return volumes.map((volume) => ({
+		params: {
+			name: getNovelSlug(volume.full_slug),
+			volume: volume.slug
+		}
+	}));
+}
+
+const { name, volume } = Astro.params;
+const storyblokApi = useStoryblokApi();
+
+const [{ data: novelResponse }, { data: volumeResponse }] = await Promise.all([
+	storyblokApi.get(`cdn/stories/novels/${name}`, { version: 'published' }),
+	storyblokApi.get(`cdn/stories/novels/${name}/volumes/${volume}`, { version: 'published' })
+]);
+
+const novelStory = novelResponse.story as NovelStory;
+const volumeStory = volumeResponse.story as VolumeStory;
+const volumes = await storyblokApi.getAll('cdn/stories', {
+	content_type: 'Volume',
+	starts_with: `novels/${name}/volumes`,
+	version: 'published'
+}) as VolumeStory[];
+const backgroundImage = resolveStoryblokAsset(novelStory.content.bannerImage) ?? resolveStoryblokAsset(novelStory.content.coverImage);
+const createdSource =
+	volumeStory.created_at
+	?? volumeStory.first_published_at
+	?? volumeStory.published_at
+	?? volumeStory.updated_at
+	?? undefined;
+const createdDate = formatShortDate(createdSource ?? undefined);
+
+const chapters = await storyblokApi.getAll('cdn/stories', {
+	content_type: 'Chapter',
+	starts_with: `novels/${name}/volumes/${volume}/chapters`,
+	version: 'published',
+	sort_by: 'content.chapterIndex:asc'
+}) as ChapterStory[];
+const latestChapterSource = chapters.at(-1)?.content.postDate ?? volumeStory.updated_at ?? volumeStory.published_at ?? volumeStory.first_published_at ?? volumeStory.created_at ?? undefined;
+const updatedDate = formatShortDate(latestChapterSource ?? undefined);
+
+const chapterLinks: VolumeChapterLink[] = chapters.map((chapter) => ({
+	name: `${chapter.content.displayName}: ${chapter.content.chapterTitle}`,
+	slug: chapter.slug,
+	href: buildChapterRoute(name, volume, chapter.slug),
+	chapterIndex: chapter.content.chapterIndex,
+	postDate: chapter.content.postDate
+}));
+---
+
+<BaseLayout title={`${volumeStory.content.displayName} | ${novelStory.content.name}`}>
+	<Volume
+		blok={volumeStory.content}
+		novelSlug={name}
+		volumeSlug={volume}
+		novelTitle={novelStory.content.name}
+		createdDate={createdDate}
+		updatedDate={updatedDate}
+		backgroundImage={backgroundImage}
+		status={novelStory.content.status}
+		volumeCount={volumes.length}
+		chapters={chapterLinks}
+	/>
+</BaseLayout>

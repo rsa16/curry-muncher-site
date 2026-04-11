@@ -6,6 +6,7 @@
     "paths": {
       "@layouts/*": ["./src/layouts/*"],
       "@pages/*": ["./src/pages/*"],
+      "@lib/*": ["./src/lib/*"],
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],

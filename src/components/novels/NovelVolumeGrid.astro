@@ -1,0 +1,30 @@
+---
+import NovelVolumeCard from './NovelVolumeCard.astro';
+
+interface VolumeCard {
+    label: string;
+    href: string;
+    image?: string;
+    lastUpdate: string;
+    chapterCount: number;
+}
+
+interface Props {
+    volumes: VolumeCard[];
+}
+
+const { volumes } = Astro.props as Props;
+---
+
+<section id="chapterContent" class="space-y-4 pt-6">
+    <div class="flex items-end justify-between">
+        <h2 class="text-[30px] font-medium leading-[1.1] text-white">Volumes</h2>
+        <p class="text-[28px] font-light text-[#b4ceff] sm:text-base">{volumes.length} total</p>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {volumes.map((volume) => (
+            <NovelVolumeCard {...volume} />
+        ))}
+    </div>
+</section>

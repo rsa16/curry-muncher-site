@@ -1,0 +1,200 @@
+---
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import { renderRichText } from '@storyblok/astro';
+import { resolveStoryblokLink, type VolumeContent } from '@lib/storyblok-novels';
+
+interface Props {
+	blok: VolumeContent;
+	coverImage?: string;
+	volumeNumber: number;
+	createdDate: string;
+	updatedDate: string;
+	firstChapterHref?: string;
+	novelSlug?: string;
+	volumeSlug?: string;
+}
+
+const { blok, coverImage, volumeNumber, createdDate, updatedDate, firstChapterHref, novelSlug, volumeSlug } = Astro.props as Props;
+const downloadLinks = (blok.downloads ?? [])
+	.map((download) => ({
+		label: download.label,
+		href: resolveStoryblokLink(download.link),
+	}))
+	.filter((download): download is { label: string; href: string } => Boolean(download.label) && Boolean(download.href));
+const hasDownloadLinks = downloadLinks.length > 0;
+const purchaseLinks = [
+	{ label: 'Japanese', href: resolveStoryblokLink(blok.rawLink) },
+	{ label: 'English', href: resolveStoryblokLink(blok.officialLink) },
+].filter((link): link is { label: string; href: string } => Boolean(link.href));
+const creditsHtml = blok.credits ? renderRichText(blok.credits as any) : '';
+---
+
+<aside class="flex w-full flex-col gap-3 xl:w-[297px]">
+	<div class="relative overflow-hidden rounded-[15px] shadow-[0_6px_45px_rgba(67,67,67,0.8)]">
+		<div class="absolute left-3 top-3 z-10 inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-[#39aadf] px-2 text-[12px] font-semibold text-white shadow-[0_4px_12px_rgba(0,0,0,0.3)]">{volumeNumber}</div>
+		{coverImage ? (
+			<Image inferSize={true} src={coverImage} alt={`Cover illustration for ${blok.displayName}`} class="aspect-[2857/4096] w-full object-cover" />
+		) : (
+			<div class="flex aspect-[2857/4096] w-full items-center justify-center rounded-[15px] bg-[#1f2730] text-center text-sm text-white/60">
+				Cover pending
+			</div>
+		)}
+	</div>
+
+	<div class="space-y-[10px] pb-[3px]">
+		{hasDownloadLinks ? (
+			<button type="button" class="cursor-pointer inline-flex h-[36px] w-full flex-1 items-center gap-2 rounded-[10px] bg-[rgba(67,124,255,0.4)] px-4 text-[14px] font-medium text-white transition hover:bg-[rgba(67,124,255,0.56)]" data-download-open>
+				<Icon name="lucide:download" class="size-[20px] shrink-0" />
+				<span>Download</span>
+			</button>
+		) : (
+			<div class="inline-flex h-[36px] flex-1 w-full cursor-not-allowed items-center gap-2 rounded-[10px] bg-[rgba(67,124,255,0.28)] px-4 text-[14px] font-medium text-white/50">
+				<Icon name="lucide:download" class="size-[20px] shrink-0" />
+				<span>Download</span>
+			</div>
+		)}
+
+		<div class="flex gap-[5px]">
+			{firstChapterHref ? (
+				<a href={firstChapterHref} class="inline-flex h-[36px] flex-[0.95] items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.2)] px-4 text-[14px] font-medium text-white transition hover:bg-[rgba(255,255,255,0.28)]">
+					<Icon name="lucide:book-open" class="size-5 shrink-0" />
+					<span>Read Online</span>
+				</a>
+			) : (
+				<div class="inline-flex h-[36px] flex-[0.95] cursor-not-allowed items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.12)] px-4 text-[14px] font-medium text-white/45">
+					<Icon name="lucide:book-open" class="size-5 shrink-0" />
+					<span>Read Online</span>
+				</div>
+			)}
+
+			<a href={novelSlug && volumeSlug ? `/error-report?series=${novelSlug}&volume=${volumeSlug}` : "/error-report"} class="cursor-pointer inline-flex h-[36px] flex-[0.95] items-center gap-2 rounded-[10px] bg-[#842b2b] px-4 text-[14px] font-medium text-white transition hover:bg-[#a33a3a]">
+				<Icon name="lucide:triangle-alert" class="size-5 shrink-0" />
+				<span>Report Error</span>
+			</a>
+		</div>
+	</div>
+
+	<div class="rounded-[15px] bg-[rgba(255,255,255,0.1)] p-[15px]">
+		<p class="text-[14px] font-medium leading-[1.46] text-[#acacac]">Purchase Links</p>
+		<div class="mt-2 flex flex-wrap gap-[7px]">
+			{purchaseLinks.length ? purchaseLinks.map((link) => (
+				<a href={link.href} target="_blank" rel="noreferrer" class="inline-flex min-h-[34px] items-center justify-center rounded-[15px] bg-[rgba(255,255,255,0.12)] px-[15px] py-[5px] text-[16px] font-normal text-white transition hover:bg-[rgba(255,255,255,0.18)]">
+					{link.label}
+				</a>
+			)) : <p class="text-[14px] text-white/55">No links available yet.</p>}
+		</div>
+	</div>
+
+	<div class="rounded-[15px] bg-[rgba(255,255,255,0.1)] p-[15px]">
+		<p class="text-[14px] font-medium leading-[1.46] text-[#acacac]">Credits</p>
+		{creditsHtml ? (
+			<div class="mt-1 text-[14px] leading-[1.46] text-white/95" set:html={creditsHtml}></div>
+		) : (
+			<p class="mt-1 text-[14px] text-white/55">No credits listed.</p>
+		)}
+	</div>
+
+	<div class="flex gap-[11px] rounded-[15px] bg-[rgba(255,255,255,0.1)] p-[15px] text-[14px]">
+		<div class="min-w-0 flex-1">
+			<p class="leading-[1.249] text-[#aeaeae]">Updated</p>
+			<div class="mt-2 inline-flex min-h-[30px] w-full items-center rounded-[10px] bg-[rgba(255,255,255,0.16)] px-[10px] py-[5px] text-white">{updatedDate}</div>
+		</div>
+		<div class="min-w-0 flex-1">
+			<p class="leading-[1.249] text-[#aeaeae]">Created</p>
+			<div class="mt-2 inline-flex min-h-[30px] w-full items-center rounded-[10px] bg-[rgba(255,255,255,0.16)] px-[10px] py-[5px] text-white">{createdDate}</div>
+		</div>
+	</div>
+</aside>
+
+{hasDownloadLinks ? (
+	<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-download-modal>
+		<div class="w-full max-w-[440px] translate-y-2 scale-[0.985] rounded-[15px] border border-white/10 bg-[#2f333d] p-4 opacity-0 shadow-[0_18px_60px_rgba(0,0,0,0.45)] transition-[opacity,transform] duration-220 ease-out" data-download-panel>
+			<div class="mb-3 flex items-center justify-between">
+				<p class="text-[16px] font-semibold text-white">Download Links</p>
+				<button type="button" class="rounded-[8px] bg-white/10 px-2 py-1 text-[12px] text-white transition hover:bg-white/20" data-download-close>Close</button>
+			</div>
+
+			<div class="flex max-h-[60vh] flex-col gap-2 overflow-y-auto pr-1">
+				{downloadLinks.map((link) => (
+					<a href={link.href} class="group flex items-center justify-between rounded-[12px] bg-[rgba(255,255,255,0.08)] px-4 py-3 text-white transition hover:bg-[rgba(255,255,255,0.14)]" data-download-link>
+						<span class="text-[14px] leading-[1.3]">{link.label}</span>
+						<Icon name="lucide:chevron-right" class="size-4 shrink-0 text-white/80 transition group-hover:translate-x-0.5" />
+					</a>
+				))}
+			</div>
+		</div>
+	</div>
+) : null}
+
+<script is:inline>
+	const setupDownloadPopup = () => {
+		const openButton = document.querySelector('[data-download-open]');
+		const modal = document.querySelector('[data-download-modal]');
+		const panel = document.querySelector('[data-download-panel]');
+		if (!openButton || !modal) return;
+
+		const closeButtons = modal.querySelectorAll('[data-download-close]');
+		let isClosing = false;
+
+		const animateOpen = () => {
+			modal.style.opacity = '1';
+			modal.style.backgroundColor = 'rgba(0, 0, 0, 0.55)';
+			modal.style.backdropFilter = 'blur(2px)';
+			modal.style.webkitBackdropFilter = 'blur(2px)';
+			if (panel) {
+				panel.style.opacity = '1';
+				panel.style.transform = 'translateY(0) scale(1)';
+			}
+		};
+
+		const animateClose = () => {
+			modal.style.opacity = '0';
+			modal.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+			modal.style.backdropFilter = 'blur(0)';
+			modal.style.webkitBackdropFilter = 'blur(0)';
+			if (panel) {
+				panel.style.opacity = '0';
+				panel.style.transform = 'translateY(8px) scale(0.985)';
+			}
+		};
+
+		const openModal = () => {
+			if (isClosing) return;
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			requestAnimationFrame(animateOpen);
+		};
+		const closeModal = () => {
+			if (isClosing || modal.classList.contains('hidden')) return;
+			isClosing = true;
+			animateClose();
+			window.setTimeout(() => {
+				modal.classList.add('hidden');
+				modal.classList.remove('flex');
+				isClosing = false;
+			}, 220);
+		};
+
+		openButton.addEventListener('click', openModal);
+		closeButtons.forEach((button) => button.addEventListener('click', closeModal));
+
+		modal.addEventListener('click', (event) => {
+			if (event.target === modal) {
+				closeModal();
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+				closeModal();
+			}
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', setupDownloadPopup, { once: true });
+	} else {
+		setupDownloadPopup();
+	}
+</script>

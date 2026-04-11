@@ -1,0 +1,96 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Novel from '@components/novels/Novel.astro';
+import {
+    buildVolumeRoute,
+    formatShortDate,
+    resolveStoryblokAsset,
+    type ChapterStory,
+    type NovelStory,
+    type NovelVolumeCardData,
+    type VolumeStory,
+} from '@lib/storyblok-novels';
+
+export async function getStaticPaths() {
+    const storyblokApi = useStoryblokApi();
+    const { data } = await storyblokApi.get('cdn/stories', {
+        content_type: 'Novel',
+        version: 'published'
+    });
+
+    return data.stories.map((novel: { slug: string }) => ({
+        params: { name: novel.slug }
+    }));
+}
+
+const { name } = Astro.params;
+const storyblokApi = useStoryblokApi();
+
+const storyResponse = (await storyblokApi.get(`cdn/stories/novels/${name}`, {
+    version: 'published'
+})) as unknown as { data: { story: NovelStory } };
+
+const story = storyResponse.data.story;
+
+const volumes = await storyblokApi.getAll('cdn/stories', {
+    content_type: 'Volume',
+    starts_with: `novels/${name}/volumes`,
+    version: 'published',
+    sort_by: 'content.sortOrder:asc'
+}) as VolumeStory[];
+
+const chapters = await storyblokApi.getAll('cdn/stories', {
+    content_type: 'Chapter',
+    starts_with: `novels/${name}/volumes`,
+    version: 'published',
+    sort_by: 'content.chapterIndex:asc'
+}) as ChapterStory[];
+
+const toTimestamp = (value?: string | null): number | undefined => {
+    if (!value) return undefined;
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+};
+
+const volumeCards: NovelVolumeCardData[] = volumes.map((volume) => {
+    const volumeChapters = chapters.filter((chapter) => chapter.full_slug.startsWith(`${volume.full_slug}/chapters/`));
+    const chapterTimestamps = volumeChapters
+        .flatMap((chapter) => [
+            toTimestamp(chapter.content.postDate),
+            toTimestamp(chapter.published_at),
+            toTimestamp(chapter.updated_at),
+            toTimestamp(chapter.first_published_at),
+        ])
+        .filter((time): time is number => typeof time === 'number');
+
+    const fallbackVolumeTimestamps = [
+        toTimestamp(volume.published_at),
+        toTimestamp(volume.updated_at),
+        toTimestamp(volume.first_published_at),
+    ].filter((time): time is number => typeof time === 'number');
+
+    const latestTimestamp = [...chapterTimestamps, ...fallbackVolumeTimestamps]
+        .reduce<number | undefined>((latest, current) => {
+            if (latest === undefined) return current;
+            return current > latest ? current : latest;
+        }, undefined);
+
+    const lastUpdateSource = latestTimestamp ? new Date(latestTimestamp).toISOString() : undefined;
+    const image = resolveStoryblokAsset(volume.content.coverImage)
+        ?? resolveStoryblokAsset(story.content.coverImage)
+        ?? resolveStoryblokAsset(story.content.bannerImage);
+
+    return {
+        label: volume.content.displayName,
+        href: buildVolumeRoute(name, volume.slug),
+        image,
+        lastUpdate: formatShortDate(lastUpdateSource),
+        chapterCount: volumeChapters.length
+    };
+});
+---
+
+<BaseLayout title={story.content.name}>
+    <Novel blok={story.content} novelSlug={name} volumes={volumeCards} volumeStories={volumes as any} />
+</BaseLayout>
