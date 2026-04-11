@@ -94,20 +94,25 @@ const rewriteChapterAnchors = (html: string): string => {
     const nestedMergedChapterPath = `/novels/${name}/${volume}/${volume}-${publicChapterSlug}`;
     const storyblokSlugPath = `/novels/${name}/${volume}/${storyblokChapterSlug}`;
     const storyblokMergedPath = `/novels/${name}/${volume}/${volume}-${storyblokChapterSlug}`;
+    const storyblokChapterPath = `/novels/${name}/volumes/${volume}/chapters/${storyblokChapterSlug}`;
+    const publicChapterPath = `/novels/${name}/volumes/${volume}/chapters/${publicChapterSlug}`;
+    const normalizePath = (pathname: string) => pathname.replace(/\/+$/, '') || '/';
 
     const sameChapterPaths = new Set([
-        currentPathname,
-        mergedChapterPath,
-        nestedMergedChapterPath,
-        storyblokSlugPath,
-        storyblokMergedPath,
+        normalizePath(currentPathname),
+        normalizePath(mergedChapterPath),
+        normalizePath(nestedMergedChapterPath),
+        normalizePath(storyblokSlugPath),
+        normalizePath(storyblokMergedPath),
+        normalizePath(storyblokChapterPath),
+        normalizePath(publicChapterPath),
     ]);
 
     return html.replace(/href=("|')(.*?)\1/g, (_match, quote: string, href: string) => {
         try {
             const resolved = new URL(href, `https://reader.local${currentPathname}`);
 
-            const isSameChapterPath = sameChapterPaths.has(resolved.pathname);
+            const isSameChapterPath = sameChapterPaths.has(normalizePath(resolved.pathname));
 
             if (isSameChapterPath && resolved.hash) {
                 return `href=${quote}${resolved.hash}${quote}`;
