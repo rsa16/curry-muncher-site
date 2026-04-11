@@ -55,22 +55,22 @@ const creditsHtml = blok.credits ? renderRichText(blok.credits as any) : '';
 			</div>
 		)}
 
-		<div class="flex gap-[5px]">
+		<div class="flex flex-nowrap gap-[5px]">
 			{firstChapterHref ? (
-				<a href={firstChapterHref} class="inline-flex h-[36px] flex-[0.95] items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.2)] px-4 text-[14px] font-medium text-white transition hover:bg-[rgba(255,255,255,0.28)]">
-					<Icon name="lucide:book-open" class="size-5 shrink-0" />
-					<span>Read Online</span>
+				<a href={firstChapterHref} class="inline-flex h-[36px] min-w-0 flex-[0.95] items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.2)] px-4 text-[clamp(11px,2.7vw,14px)] font-medium text-white transition hover:bg-[rgba(255,255,255,0.28)]">
+					<Icon name="lucide:book-open" class="size-[18px] shrink-0 sm:size-5" />
+					<span class="whitespace-nowrap">Read Online</span>
 				</a>
 			) : (
-				<div class="inline-flex h-[36px] flex-[0.95] cursor-not-allowed items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.12)] px-4 text-[14px] font-medium text-white/45">
-					<Icon name="lucide:book-open" class="size-5 shrink-0" />
-					<span>Read Online</span>
+				<div class="inline-flex h-[36px] min-w-0 flex-[0.95] cursor-not-allowed items-center gap-2 rounded-[10px] bg-[rgba(255,255,255,0.12)] px-4 text-[clamp(11px,2.7vw,14px)] font-medium text-white/45">
+					<Icon name="lucide:book-open" class="size-[18px] shrink-0 sm:size-5" />
+					<span class="whitespace-nowrap">Read Online</span>
 				</div>
 			)}
 
-			<a href={novelSlug && volumeSlug ? `/error-report?series=${novelSlug}&volume=${volumeSlug}` : "/error-report"} class="cursor-pointer inline-flex h-[36px] flex-[0.95] items-center gap-2 rounded-[10px] bg-[#842b2b] px-4 text-[14px] font-medium text-white transition hover:bg-[#a33a3a]">
-				<Icon name="lucide:triangle-alert" class="size-5 shrink-0" />
-				<span>Report Error</span>
+			<a href={novelSlug && volumeSlug ? `/error-report?series=${novelSlug}&volume=${volumeSlug}` : "/error-report"} class="cursor-pointer inline-flex h-[36px] min-w-0 flex-[0.95] items-center gap-2 rounded-[10px] bg-[#842b2b] px-4 text-[clamp(11px,2.7vw,14px)] font-medium text-white transition hover:bg-[#a33a3a]">
+				<Icon name="lucide:triangle-alert" class="size-[18px] shrink-0 sm:size-5" />
+				<span class="whitespace-nowrap">Report Error</span>
 			</a>
 		</div>
 	</div>

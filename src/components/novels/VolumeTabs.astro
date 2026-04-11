@@ -21,10 +21,10 @@ const synopsisHtml = renderRichText(blok.synopsis as any);
 	</div>
 
 	<div data-volume-tabs class="flex flex-col gap-4 mb-2 rounded-[15px]">
-		<div role="tablist" aria-label="Volume sections" class="grid grid-cols-3 rounded-[10px] bg-[rgba(255,255,255,0.15)] p-[5px] text-center text-[16px] font-medium">
-			<button type="button" role="tab" aria-selected="true" data-volume-tab="chapters" class="rounded-[10px] bg-[#525252] px-[15px] py-[5px] text-white transition">Chapters</button>
-			<button type="button" role="tab" aria-selected="false" data-volume-tab="illustrations" class="rounded-[10px] px-[15px] py-[5px] text-[#808080] transition hover:text-white">Illustrations</button>
-			<button type="button" role="tab" aria-selected="false" data-volume-tab="changelog" class="rounded-[10px] px-[15px] py-[5px] text-[#808080] transition hover:text-white">Changelog</button>
+		<div role="tablist" aria-label="Volume sections" class="grid grid-cols-3 rounded-[10px] bg-[rgba(255,255,255,0.15)] p-[5px] text-center text-[clamp(11px,3vw,16px)] font-medium">
+			<button type="button" role="tab" aria-selected="true" data-volume-tab="chapters" class="w-full rounded-[10px] bg-[#525252] px-[8px] py-[6px] text-white transition sm:px-[15px] sm:py-[5px]">Chapters</button>
+			<button type="button" role="tab" aria-selected="false" data-volume-tab="illustrations" class="w-full rounded-[10px] px-[8px] py-[6px] text-[#808080] transition hover:text-white sm:px-[15px] sm:py-[5px]">Illustrations</button>
+			<button type="button" role="tab" aria-selected="false" data-volume-tab="changelog" class="w-full rounded-[10px] px-[8px] py-[6px] text-[#808080] transition hover:text-white sm:px-[15px] sm:py-[5px]">Changelog</button>
 		</div>
 
 		<div class="space-y-[5px] overflow-y-auto pr-1" data-volume-tab-panel="chapters" role="tabpanel">

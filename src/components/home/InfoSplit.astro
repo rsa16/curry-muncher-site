@@ -5,9 +5,9 @@ import { faqs } from "@data/home";
 <section class="section split flex w-full flex-col gap-6 md:flex-row">
 	<div class="panel w-full rounded-2xl bg-white/3 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
 		<div class="panel-header">
-			<h2 class="text-3xl font-semibold text-white md:text-2xl">FAQ</h2>
+			<h2 class="min-w-0 flex-1 text-[clamp(1.5rem,4.2vw,2.25rem)] font-semibold leading-tight text-white">FAQ</h2>
 			<a
-				class="ml-auto inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-4 py-1.5 text-[0.9rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)]"
+				class="ml-auto inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-3 py-1.5 text-[0.82rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)] sm:px-4 sm:text-[0.9rem]"
 				href="/faq"
 			>
 				See more
@@ -29,9 +29,9 @@ import { faqs } from "@data/home";
 	</div>
 	<div class="panel w-full rounded-2xl bg-white/3 p-6 text-[#BFBFBF] shadow-[0_18px_40px_rgba(15,23,42,0.45)]">
 		<div class="panel-header">
-			<h2 class="text-3xl font-semibold text-white md:text-2xl">Localization Philosophy</h2>
+			<h2 class="min-w-0 flex-1 text-[clamp(1.5rem,4.2vw,2.25rem)] font-semibold leading-tight text-white">Localization Philosophy</h2>
 			<a
-				class="ml-auto inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-4 py-1.5 text-[0.9rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)]"
+				class="ml-auto inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[rgba(148,163,184,0.35)] bg-[rgba(148,163,184,0.08)] px-3 py-1.5 text-[0.82rem] font-semibold text-slate-50 transition hover:-translate-y-0.5 hover:border-[rgba(226,232,240,0.8)] hover:bg-[rgba(148,163,184,0.16)] focus-visible:-translate-y-0.5 focus-visible:border-[rgba(226,232,240,0.8)] focus-visible:bg-[rgba(148,163,184,0.16)] sm:px-4 sm:text-[0.9rem]"
 				href="/about#philosophy"
 			>
 				See more
@@ -63,7 +63,16 @@ import { faqs } from "@data/home";
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex-wrap: wrap;
 		gap: 1rem;
+	}
+
+	.panel-header h2 {
+		min-width: 0;
+	}
+
+	.panel-header a {
+		flex: 0 0 auto;
 	}
 
 	.faq-item {
@@ -140,7 +149,7 @@ import { faqs } from "@data/home";
 
 	@media (max-width: 640px) {
 		.panel-header {
-			align-items: center;
+			align-items: flex-start;
 		}
 
 		.faq-question {
