@@ -372,10 +372,18 @@
   }
 
   function setupTocSelection() {
-    const current = window.location.pathname;
+    const currentSlug = els.body?.dataset.currentSlug || "";
+    if (!currentSlug) return;
+
     els.tocLinks.forEach((link) => {
-      const href = link.getAttribute("href") || "";
-      link.classList.toggle("select", href === current);
+      try {
+        const href = link.getAttribute("href") || "";
+        const match = href.match(/([a-z0-9\-]+)$/);
+        const linkSlug = match ? match[1] : "";
+        link.classList.toggle("select", linkSlug === currentSlug);
+      } catch {
+        link.classList.toggle("select", false);
+      }
     });
   }
 
