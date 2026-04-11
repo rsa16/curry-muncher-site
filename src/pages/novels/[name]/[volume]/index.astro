@@ -59,7 +59,7 @@ const chapters = await storyblokApi.getAll('cdn/stories', {
 	content_type: 'Chapter',
 	starts_with: `novels/${name}/volumes/${volume}/chapters`,
 	version: 'published',
-	sort_by: 'content.chapterIndex:asc'
+	sort_by: 'content.chapterIndex:asc:int'
 }) as ChapterStory[];
 const latestChapterSource = chapters.at(-1)?.content.postDate ?? volumeStory.updated_at ?? volumeStory.published_at ?? volumeStory.first_published_at ?? volumeStory.created_at ?? undefined;
 const updatedDate = formatShortDate(latestChapterSource ?? undefined);

@@ -57,7 +57,7 @@ const volumeChapters = (await storyblokApi.getAll('cdn/stories', {
     content_type: 'Chapter',
     starts_with: `novels/${name}/volumes/${volume}/chapters`,
     version: 'published',
-    sort_by: 'content.chapterIndex:asc'
+    sort_by: 'content.chapterIndex:asc:int'
 })) as ChapterStory[];
 
 const chapterIndex = volumeChapters.findIndex((entry) => entry.slug === storyblokChapterSlug);

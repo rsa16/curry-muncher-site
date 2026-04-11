@@ -45,7 +45,7 @@ const chapters = await storyblokApi.getAll('cdn/stories', {
     content_type: 'Chapter',
     starts_with: `novels/${name}/volumes`,
     version: 'published',
-    sort_by: 'content.chapterIndex:asc'
+    sort_by: 'content.chapterIndex:asc:int'
 }) as ChapterStory[];
 
 const toTimestamp = (value?: string | null): number | undefined => {

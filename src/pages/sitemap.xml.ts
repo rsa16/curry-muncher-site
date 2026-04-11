@@ -65,7 +65,7 @@ export async function GET() {
 			content_type: 'Chapter',
 			starts_with: 'novels/',
 			version: 'published',
-			sort_by: 'content.chapterIndex:asc'
+			sort_by: 'content.chapterIndex:asc:int'
 		}) as Promise<ChapterStory[]>,
 	]);
 
