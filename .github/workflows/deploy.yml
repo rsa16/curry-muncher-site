@@ -1,0 +1,72 @@
+name: Deploy to Wasmer
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-wasmer-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      WASMER_TOKEN: ${{ secrets.WASMER_TOKEN }}
+      WASMER_OWNER: ${{ vars.WASMER_OWNER || github.repository_owner }}
+      WASMER_APP_NAME: ${{ vars.WASMER_APP_NAME || github.event.repository.name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        env:
+          STORYBLOK_TOKEN: ${{ secrets.STORYBLOK_TOKEN }}
+          PUBLIC_IMGBB_API_KEY: ${{ vars.PUBLIC_IMGBB_API_KEY }}
+          PUBLIC_WORKER_URL: ${{ vars.PUBLIC_WORKER_URL }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+        run: npm run build
+
+      - name: Install Wasmer CLI
+        run: |
+          curl -fsSL https://get.wasmer.io | sh
+          echo "$HOME/.wasmer/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare Wasmer manifests
+        run: |
+          cat > app.yaml <<EOF
+          kind: wasmer.io/App.v0
+          owner: ${WASMER_OWNER}
+          name: ${WASMER_APP_NAME}
+          package: .
+          EOF
+
+          cat > wasmer.toml <<EOF
+          [package]
+          name = "${WASMER_OWNER}/${WASMER_APP_NAME}"
+          version = "0.0.1"
+          description = "Astro static site for Curry Muncher"
+
+          [fs]
+          public = "dist"
+          EOF
+
+      - name: Deploy static site to Wasmer
+        run: wasmer deploy --bump
