@@ -67,24 +67,23 @@ const metadata = [
 		<div class="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"></div>
 	</div>
 
-	<div class="relative mx-auto w-full max-w-none space-y-3 px-3 pb-8 pt-4 sm:max-w-[70vw] sm:px-8 sm:pb-12 sm:pt-8">
+	<div class="relative mx-auto w-full max-w-none space-y-3 px-3 pb-8 pt-4 md:max-w-[70vw] md:px-8 md:pb-12 md:pt-8">
+		<nav aria-label="Breadcrumb" class="min-w-0">
+			<ol class="flex flex-wrap items-center justify-start gap-1 text-[11px] text-white/50 sm:text-[13px]">
+				<li><a href="/novels" class="transition hover:text-white">Series</a></li>
+				<li class="text-white/55">/</li>
+				<li class="truncate text-white">{blok.name}</li>
+			</ol>
+		</nav>
 		<article class="overflow-hidden rounded-[15px] bg-[rgba(255,255,255,0.12)] shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-[15px]">
-			<header class="relative mx-3 mb-1 mt-4 h-[22vh] overflow-hidden rounded-[15px] shadow-[0_10px_32px_rgba(0,0,0,0.25)] sm:mx-6 sm:mt-6 sm:h-[18vh]">
+			<header class="relative mx-3 mb-1 mt-4 h-[22vh] overflow-hidden rounded-[15px] shadow-[0_10px_32px_rgba(0,0,0,0.25)] md:mx-6 md:mt-6 md:h-[18vh]">
 				<div class="absolute inset-0 overflow-hidden" data-banner-bg-shell aria-hidden="true">
-					{heroImage ? <Image inferSize={true} src={heroImage} class="absolute max-w-full -translate-y-1/2" alt="" aria-hidden="true" data-banner-bg-image /> : null}
+					{heroImage ? <Image inferSize={true} src={heroImage} class="absolute max-w-full lg:-translate-y-1/2" alt="" aria-hidden="true" data-banner-bg-image /> : null}
 				</div>
 				<div class="absolute inset-0 bg-[#A3C8FF]/20"></div>
 				<div class="absolute inset-0 bg-[linear-gradient(90deg,#2E5566_0%,rgba(46,85,102,0.40)_42%,rgba(46,85,102,0)_100%)]"></div>
 
-				<div class="relative flex h-full flex-col justify-between px-4 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4">
-					<nav aria-label="Breadcrumb" class="min-w-0">
-						<ol class="flex flex-wrap items-center justify-start gap-1 text-[11px] text-white/50 sm:text-[13px]">
-							<li><a href="/novels" class="transition hover:text-white">Series</a></li>
-							<li class="text-white/55">/</li>
-							<li class="truncate text-white">{blok.name}</li>
-						</ol>
-					</nav>
-
+				<div class="relative flex h-full flex-col justify-end px-4 pb-4 pt-3 sm:px-6 sm:pb-5 sm:pt-4">
 					<div class="flex flex-col gap-1">
 						<div class="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs">
 							<span class="rounded-full bg-white/20 px-2 py-0.5 font-light lowercase tracking-wide text-white">{blok.status}</span>
@@ -95,9 +94,9 @@ const metadata = [
 				</div>
 			</header>
 
-			<div class="relative flex flex-col gap-5 px-4 py-5 sm:h-[40vh] sm:flex-row sm:gap-6 sm:px-6 sm:pb-7 sm:pt-6 2xl:h-[60vh]">
-				<div class="mx-auto w-full max-w-[260px] sm:mx-0 sm:h-full sm:w-auto sm:max-w-none sm:flex-none">
-					<div class="aspect-[564/808] overflow-hidden rounded-[15px] border border-white/20 shadow-[0_11px_45px_rgba(0,0,0,0.3)] sm:h-full sm:aspect-auto">
+			<div class="relative flex flex-col gap-5 px-4 py-5 md:px-6 md:pb-7 md:pt-6 lg:h-[40vh] lg:flex-row lg:gap-6 2xl:h-[60vh]">
+				<div class="mx-auto w-full max-w-[260px] lg:mx-0 lg:h-full lg:w-auto lg:max-w-none lg:flex-none">
+					<div class="aspect-[564/808] overflow-hidden rounded-[15px] border border-white/20 shadow-[0_11px_45px_rgba(0,0,0,0.3)] lg:h-full lg:aspect-auto">
 						{coverImage ? (
 							<Image src={coverImage} width={564} height={808} alt={`Cover illustration for ${blok.name}`} class="h-full w-full object-cover sm:w-auto" />
 						) : (
@@ -107,17 +106,17 @@ const metadata = [
 				</div>
 
 				<div class="flex min-h-0 flex-1 flex-col gap-5 pb-1 pt-0">
-					<div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+					<div class="flex flex-col gap-5 lg:flex-row lg:items-start">
 						<div class="flex w-full flex-1 flex-wrap gap-[11px]">
 							{metadata.map((item) => (
 								<NovelMetadataItem label={item.label} value={item.value} />
 							))}
 						</div>
 
-						<span class="hidden h-full bg-white/20 sm:mx-6 sm:block"></span>
+						<span class="hidden h-full bg-white/20 lg:mx-6 lg:block"></span>
 
 						{quickLinks.length > 0 && (
-							<div class="flex w-full flex-col gap-2 sm:flex-1 sm:justify-end">
+							<div class="flex w-full flex-col gap-2 lg:flex-1 lg:justify-end">
 								<p class="text-sm font-semibold text-white">Quicklinks</p>
 								<div class="flex flex-wrap gap-2">
 									{quickLinks.map((item) => (
@@ -130,13 +129,13 @@ const metadata = [
 						)}
 					</div>
 
-					<div class="max-w-3xl min-h-0 overflow-hidden border-l-0 pl-0 sm:flex-1 sm:border-l-2 sm:border-white/20 sm:pl-5">
+						<div class="max-w-3xl min-h-0 overflow-hidden border-l-0 pl-0 lg:flex-1 lg:border-l-2 lg:border-white/20 lg:pl-5">
 						<div
 							data-synopsis-scroll
-							class="flex overflow-visible pr-0 sm:h-full sm:items-center sm:overflow-y-auto sm:pr-3 [scrollbar-gutter:stable]"
+								class="flex overflow-visible pr-0 lg:h-full lg:items-center lg:overflow-y-auto lg:pr-3 [scrollbar-gutter:stable]"
 							style="--synopsis-top-fade: 0px; --synopsis-bottom-fade: 18px; -webkit-mask-image: linear-gradient(to bottom, transparent 0, black var(--synopsis-top-fade), black calc(100% - var(--synopsis-bottom-fade)), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, black var(--synopsis-top-fade), black calc(100% - var(--synopsis-bottom-fade)), transparent 100%);"
 						>
-							<p class="text-[16px] leading-[1.5] text-[#bfc2c5] sm:h-full sm:text-[18px] sm:leading-[1.46]">{blok.synopsis}</p>
+								<p class="text-[16px] leading-[1.5] text-[#bfc2c5] md:h-full md:text-[18px] md:leading-[1.46]">{blok.synopsis}</p>
 						</div>
 					</div>
 
@@ -147,8 +146,8 @@ const metadata = [
 							rel={hasEpubLink ? 'noreferrer' : undefined}
 							aria-disabled={!hasEpubLink}
 							tabindex={hasEpubLink ? undefined : -1}
-							class:list={[
-								'inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] px-5 text-[16px] font-medium text-white transition sm:w-auto',
+								class:list={[
+									'inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] px-5 text-[16px] font-medium text-white transition lg:w-auto',
 								hasEpubLink
 									? 'bg-[rgba(67,124,255,0.4)] hover:bg-[rgba(67,124,255,0.56)]'
 									: 'cursor-not-allowed bg-white/15 text-white/45 pointer-events-none'
@@ -158,12 +157,12 @@ const metadata = [
 							<span>EPUBs/PDFs</span>
 						</a>
 
-						<a href={volumes[0]?.href ?? '#'} class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] bg-white/20 px-5 text-[16px] font-medium text-white transition hover:bg-white/30 sm:w-auto">
+						<a href={volumes[0]?.href ?? '#'} class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[50px] bg-white/20 px-5 text-[16px] font-medium text-white transition hover:bg-white/30 lg:w-auto">
 							<Icon name="lucide:book-open" class="size-5" />
 							<span>Read</span>
 						</a>
 
-						<div class="flex w-full flex-wrap gap-1 sm:flex-1 sm:justify-end">
+						<div class="flex w-full flex-wrap gap-1 lg:flex-1 lg:justify-end">
 							<button
 								type="button"
 								data-novel-action="gallery"
