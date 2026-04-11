@@ -772,13 +772,15 @@ html {
     flex-direction: column;
     background-color: var(--menu-bg);
     width: min(55vh, calc(100% - 48px));
-    height: clamp(420px, 76vh, 760px);
+    height: fit-content;
+    max-height: min(76vh, 760px);
     border-radius: 20px;
     padding: 25px 35px;
     box-shadow: 5px 5px 100px 0px rgba(0, 0, 0, 0.3);
     opacity: 0;
     transform: translateY(12px);
     transition: opacity 360ms ease, transform 420ms var(--ease-out-expo);
+    overflow: hidden;
 }
 
 #fontMenu {
@@ -814,6 +816,7 @@ html {
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    max-height: calc(min(76vh, 760px) - 112px);
     padding-right: 6px;
 }
 
@@ -1106,8 +1109,7 @@ html {
 }
 
 #creditsMenu {
-    width: 44vh;
-    padding-bottom: 30px;
+    width: min(520px, calc(100% - 28px));
 }
 
 #creditsMenu h3 {
@@ -1401,7 +1403,7 @@ input[type="checkbox"]:checked + .slider:before {
 
     .menuChild {
         width: calc(100% - 40px);
-        height: min(68vh, 620px);
+        max-height: min(68vh, 620px);
         padding: 18px 16px;
         border-radius: 16px;
     }
@@ -1412,6 +1414,7 @@ input[type="checkbox"]:checked + .slider:before {
 
     .content {
         margin-top: 14px;
+        max-height: calc(min(68vh, 620px) - 88px);
         padding-right: 4px;
     }
 
