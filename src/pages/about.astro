@@ -5,9 +5,15 @@ import AboutIntro from "@components/about/AboutIntro.astro";
 import AboutTranslation from "@components/about/AboutTranslation.astro";
 import AboutPhilosophy from "@components/about/AboutPhilosophy.astro";
 import AboutQuote from "@components/about/AboutQuote.astro";
+import aboutBg from "@assets/about-bg.png";
+import { buildDescription } from "@lib/seo";
+
+const description = buildDescription(
+	'Where Curry Muncher TLs came from and our strongly opinionated translation philosophy.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations">
+<BaseLayout title="About" description={description} image={aboutBg.src} imageAlt="About Curry Muncher Translations preview">
 	<AboutHeader />
 	<AboutIntro />
 	<AboutTranslation />

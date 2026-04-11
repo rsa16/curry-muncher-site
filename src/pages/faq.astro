@@ -2,9 +2,14 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import FaqSection from "@components/faq/FaqSection.astro";
 import { faqs } from "@data/home";
+import { buildDescription } from "@lib/seo";
+
+const description = buildDescription(
+	'Answers about releases, translation, etc.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations | FAQ">
+<BaseLayout title="FAQ" description={description}>
 	<div class="mx-4 sm:mx-6 lg:mx-24 2xl:mx-48">
 		<FaqSection faqs={faqs} />
 	</div>

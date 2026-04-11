@@ -1,8 +1,13 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { buildDescription } from "@lib/seo";
+
+const description = buildDescription(
+	'this page will be done at some point...'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations | Staf">
+<BaseLayout title="Staff" description={description}>
     <div class="flex h-screen items-center justify-center">
         <h1 class="font-serif text-[48px] leading-none text-[#debaa2] sm:text-[72px] lg:text-[96px]">to be created</h1>
     </div>

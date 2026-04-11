@@ -4,14 +4,17 @@ import { Font } from "astro:assets";
 import {
     asEditableBlok,
     buildChapterRoute,
+    extractRichTextParagraphs,
     formatLongDate,
     getNovelSlug,
-    toPublicChapterSlug,
     getVolumeSlug,
+    resolveStoryblokAsset,
     type ChapterStory,
     type NovelStory,
     type VolumeStory,
+    toPublicChapterSlug,
 } from '@lib/storyblok-novels';
+import { buildDescription, buildPageTitle, resolveAbsoluteUrl } from '@lib/seo';
 
 export async function getStaticPaths() {
     const storyblokApi = useStoryblokApi();
@@ -68,9 +71,19 @@ const nextChapterHref = nextChapter
     ? buildChapterRoute(name, volume, toPublicChapterSlug(volume, nextChapter.slug))
     : '';
 
-const renderedRichText = renderRichText(chapterStory.content.content as any);
+const renderedRichText: string = renderRichText(chapterStory.content.content as any) ?? '';
 const chapterDate = formatLongDate(chapterStory.content.postDate);
 const pageTitle = `${chapterStory.content.displayName}: ${chapterStory.content.chapterTitle}`;
+const chapterParagraphs = extractRichTextParagraphs(chapterStory.content.content);
+const chapterDescription = buildDescription(
+    `${chapterStory.content.displayName}: ${chapterStory.content.chapterTitle}`,
+    chapterParagraphs.slice(0, 2).join(' '),
+    `Read ${novelStory.content.name} from ${volumeStory.content.displayName}.`
+);
+const chapterImage = resolveStoryblokAsset(volumeStory.content.coverImage)
+    ?? resolveStoryblokAsset(novelStory.content.bannerImage)
+    ?? resolveStoryblokAsset(novelStory.content.coverImage);
+const fullPageTitle = buildPageTitle(pageTitle);
 
 const rewriteChapterAnchors = (html: string): string => {
     const publicChapterSlug = toPublicChapterSlug(volume, storyblokChapterSlug);
@@ -113,6 +126,7 @@ const tocEntries = volumeChapters.map((entry, index) => ({
     href: buildChapterRoute(name, volume, toPublicChapterSlug(volume, entry.slug)),
     label: `${entry.content.displayName}: ${entry.content.chapterTitle}`
 }));
+const canonicalUrl = resolveAbsoluteUrl(`/novels/${name}/${volume}/${currentChapterPublicSlug}`);
 ---
 
 <!DOCTYPE html>
@@ -120,7 +134,21 @@ const tocEntries = volumeChapters.map((entry, index) => ({
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{pageTitle}</title>
+        <meta name="description" content={chapterDescription} />
+        <meta name="theme-color" content="#161922" />
+        <meta property="og:site_name" content="Curry Muncher Translations" />
+        <meta property="og:type" content="article" />
+        {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
+        <meta property="og:title" content={fullPageTitle} />
+        <meta property="og:description" content={chapterDescription} />
+        {chapterImage ? <meta property="og:image" content={chapterImage} /> : null}
+        {chapterImage ? <meta property="og:image:alt" content={`${novelStory.content.name} chapter preview`} /> : null}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={fullPageTitle} />
+        <meta name="twitter:description" content={chapterDescription} />
+        {chapterImage ? <meta name="twitter:image" content={chapterImage} /> : null}
+        <link rel="canonical" href={canonicalUrl ?? Astro.url.href} />
+        <title>{fullPageTitle}</title>
         <link rel="stylesheet" href="/css/reader.css" type="text/css" />
         <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
 

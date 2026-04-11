@@ -1,6 +1,7 @@
 ---
 import { useStoryblokApi } from '@storyblok/astro';
 import BaseLayout from "@layouts/BaseLayout.astro";
+import curryBg from "@assets/curry-bg.png";
 import Hero from "@components/home/Hero.astro";
 import LatestChapters from "@components/home/LatestChapters.astro";
 import StaffSection from "@components/home/StaffSection.astro";
@@ -17,6 +18,7 @@ import {
 	type ChapterStory,
 	type NovelStory,
 } from "@lib/storyblok-novels";
+import { buildDescription, SITE_NAME } from "@lib/seo";
 
 type LatestChapterCard = {
 	series: string;
@@ -71,9 +73,13 @@ const latestChapters: LatestChapterCard[] = chapterStories.slice(0, 6).map((chap
 		href: buildChapterRoute(novelSlug, volumeSlug, toPublicChapterSlug(volumeSlug, chapter.slug)),
 	};
 }).filter((chapter): chapter is LatestChapterCard => chapter !== null);
+
+const description = buildDescription(
+	'I am rsa. I like curry. I translate. Oh, and I get help sometimes too.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations">
+<BaseLayout title={SITE_NAME} description={description} image={curryBg.src} imageAlt="Curry Muncher Translations homepage preview">
 	<Hero series={series}/>
 
 	<div class="z-150 mx-4 mt-12 mb-12 flex flex-col gap-14 sm:mx-6 md:mx-12 lg:mx-24 2xl:mx-48">

@@ -1,10 +1,26 @@
 ---
 import { Font } from "astro:assets";
+import curryMuncherLogo from "@assets/logos/curry-muncher-logo.png";
 import Sidebar from "@components/Sidebar.astro";
 import TopNav from "@components/TopNav.astro";
 import "@styles/global.css";
+import { buildDescription, buildPageTitle, DEFAULT_DESCRIPTION, resolveAbsoluteUrl, SITE_NAME } from "@lib/seo";
 
-const { title = "Curry Muncher Translations" } = Astro.props;
+const {
+	title,
+	description,
+	image,
+	imageAlt,
+	canonicalPath,
+	type = 'website',
+	noIndex = false,
+} = Astro.props;
+
+const pageTitle = buildPageTitle(title);
+const pageDescription = buildDescription(description ?? DEFAULT_DESCRIPTION);
+const canonicalUrl = resolveAbsoluteUrl(canonicalPath ?? Astro.url.pathname) ?? Astro.url.href;
+const previewImage = resolveAbsoluteUrl(image) ?? resolveAbsoluteUrl(curryMuncherLogo.src);
+const previewImageAlt = imageAlt ?? pageTitle;
 ---
 
 <html lang="en">
@@ -15,14 +31,31 @@ const { title = "Curry Muncher Translations" } = Astro.props;
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={pageDescription} />
+		<meta name="theme-color" content="#161922" />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:locale" content="en_US" />
+		{previewImage ? <meta property="og:image" content={previewImage} /> : null}
+		{previewImage ? <meta property="og:image:alt" content={previewImageAlt} /> : null}
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		{previewImage ? <meta name="twitter:image" content={previewImage} /> : null}
+		{previewImage ? <meta name="twitter:image:alt" content={previewImageAlt} /> : null}
+		<link rel="canonical" href={canonicalUrl} />
+		{noIndex ? <meta name="robots" content="noindex,nofollow" /> : null}
 
 		<Font cssVariable="--font-instrument" />
 		<Font cssVariable="--font-poppins" />
 		<Font cssVariable="--font-merriweather" />
 
-		<title>{title}</title>
+		<title>{pageTitle}</title>
 	</head>
 	<body class="box-border min-h-screen sm:h-screen bg-sidebar">
 		<div class="page flex h-full w-full text-white">

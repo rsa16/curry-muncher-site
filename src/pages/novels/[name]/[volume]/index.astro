@@ -5,6 +5,7 @@ import Volume from '@components/novels/Volume.astro';
 import {
 	buildChapterRoute,
 	formatShortDate,
+	extractRichTextParagraphs,
 	getNovelSlug,
 	resolveStoryblokAsset,
 	type ChapterStory,
@@ -12,6 +13,7 @@ import {
 	type VolumeChapterLink,
 	type VolumeStory,
 } from '@lib/storyblok-novels';
+import { buildDescription } from '@lib/seo';
 
 export async function getStaticPaths() {
 	const storyblokApi = useStoryblokApi();
@@ -69,9 +71,15 @@ const chapterLinks: VolumeChapterLink[] = chapters.map((chapter) => ({
 	chapterIndex: chapter.content.chapterIndex,
 	postDate: chapter.content.postDate
 }));
+
+const volumeDescription = buildDescription(
+	volumeStory.content.displayName,
+	extractRichTextParagraphs(volumeStory.content.synopsis).slice(0, 2).join(' '),
+	`Chapter list, metadata, and updates for ${novelStory.content.name}.`
+);
 ---
 
-<BaseLayout title={`${volumeStory.content.displayName} | ${novelStory.content.name}`}>
+<BaseLayout title={`${volumeStory.content.displayName} | ${novelStory.content.name}`} description={volumeDescription} image={backgroundImage} imageAlt={`${novelStory.content.name} ${volumeStory.content.displayName} preview`} type="article">
 	<Volume
 		blok={volumeStory.content}
 		novelSlug={name}

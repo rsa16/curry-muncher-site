@@ -11,6 +11,7 @@ import {
     type NovelVolumeCardData,
     type VolumeStory,
 } from '@lib/storyblok-novels';
+import { buildDescription } from '@lib/seo';
 
 export async function getStaticPaths() {
     const storyblokApi = useStoryblokApi();
@@ -89,8 +90,14 @@ const volumeCards: NovelVolumeCardData[] = volumes.map((volume) => {
         chapterCount: volumeChapters.length
     };
 });
+
+const novelImage = resolveStoryblokAsset(story.content.bannerImage) ?? resolveStoryblokAsset(story.content.coverImage);
+const description = buildDescription(
+	story.content.synopsis,
+	`Follow ${story.content.name} on Curry Muncher Translations.`
+);
 ---
 
-<BaseLayout title={story.content.name}>
+<BaseLayout title={story.content.name} description={description} image={novelImage} imageAlt={`${story.content.name} preview`} type="article">
     <Novel blok={story.content} novelSlug={name} volumes={volumeCards} volumeStories={volumes as any} />
 </BaseLayout>

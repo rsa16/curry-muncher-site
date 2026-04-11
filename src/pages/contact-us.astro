@@ -1,8 +1,13 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { buildDescription } from "@lib/seo";
+
+const description = buildDescription(
+    'Get in touch with Curry Muncher Translations... through Discord.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations | Series">
+<BaseLayout title="Contact Us" description={description}>
 	<div class="pb-12 pt-8 sm:pt-12 min-h-screen flex flex-col">
 		<div class="mx-auto flex w-full flex-col gap-8 sm:gap-10 px-4 sm:px-6 lg:px-24 2xl:px-48">
             <header class="text-center">

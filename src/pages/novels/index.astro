@@ -5,6 +5,7 @@ import { series as fallbackSeries, type Series } from "@data/home";
 import SeriesHeader from "@components/novels/SeriesHeader.astro";
 import SeriesGrid from "@components/novels/SeriesGrid.astro";
 import { resolveStoryblokAsset, type NovelStory } from "@lib/storyblok-novels";
+import { buildDescription } from '@lib/seo';
 
 const storyblokApi = useStoryblokApi();
 const novelStories = (await storyblokApi.getAll('cdn/stories', {
@@ -29,9 +30,13 @@ const storyblokSeries: Series[] = novelStories.reduce<Series[]>((acc, story) => 
 }, []);
 
 const series = storyblokSeries.length > 0 ? storyblokSeries : fallbackSeries;
+
+const description = buildDescription(
+	'Our translation catalogue.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations | Series">
+<BaseLayout title="Novels" description={description}>
 	<div class="mx-4 pb-12 pt-8 sm:mx-6 sm:pt-10 lg:mx-24 2xl:mx-48">
 		<div class="mx-auto flex w-full flex-col gap-8 sm:gap-10">
 			<SeriesHeader />

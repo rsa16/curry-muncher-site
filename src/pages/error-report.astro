@@ -3,6 +3,7 @@ import { useStoryblokApi } from '@storyblok/astro';
 import BaseLayout from "@layouts/BaseLayout.astro";
 import ReportHeader from "@components/error-report/ReportHeader.astro";
 import ErrorReportForm from "@components/error-report/ErrorReportForm.astro";
+import { buildDescription } from "@lib/seo";
 import { getNovelSlug, getVolumeSlug, type ChapterStory, type NovelStory, type VolumeStory } from "@lib/storyblok-novels";
 
 type SeriesOption = {
@@ -85,9 +86,13 @@ const chaptersBySeriesVolume = chapterStories.reduce<Record<string, ChapterOptio
 
 const imgbbApiKey = import.meta.env.PUBLIC_IMGBB_API_KEY;
 const publicWorkerUrl = import.meta.env.PUBLIC_WORKER_URL;
+
+const description = buildDescription(
+	'Report translation errors, broken chapter links, or other issues for Curry Muncher Translations.'
+);
 ---
 
-<BaseLayout title="Curry Muncher Translations | Error Report">
+<BaseLayout title="Report an Error" description={description}>
 	<div class="mx-4 pb-12 pt-8 sm:mx-6 sm:pt-10 lg:mx-24 2xl:mx-48">
 		<div class="mx-auto flex w-full flex-col gap-8 sm:gap-10">
 			<ReportHeader />
