@@ -135,12 +135,13 @@ const illustrationMeta = illustrationAssets.map((asset, index) => ({
 			};
 		}).sort((left, right) => left.index - right.index);
 
-		if (!modal || !panelImage || !illustrations.length) {
-			return;
-		}
-
 		let activeIndex = 0;
-		let isClosing = false;
+
+		const setupIllustrationModal = () => {
+			if (!modal || !panelImage || !illustrations.length) {
+				return;
+			}
+			let isClosing = false;
 
 		const updateNavigationState = () => {
 			const hasMultiple = illustrations.length > 1;
@@ -222,6 +223,9 @@ const illustrationMeta = illustrationAssets.map((asset, index) => ({
 		});
 
 		updateNavigationState();
+		};
+
+		setupIllustrationModal();
 
 		const tabs = Array.from(root.querySelectorAll('[data-volume-tab]'));
 		const panels = Array.from(root.querySelectorAll('[data-volume-tab-panel]'));

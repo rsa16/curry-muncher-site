@@ -195,14 +195,14 @@ const metadata = [
 		<NovelVolumeGrid volumes={volumes} />
 	</div>
 
-	{allIllustrations.length > 0 ? (
-		<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-gallery-modal>
-			<div class="w-full max-w-4xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-gallery-panel>
-				<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
-					<h2 class="text-[20px] font-semibold text-white">Gallery</h2>
-					<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-gallery-close>Close</button>
-				</div>
-				<div class="flex-1 overflow-y-auto pr-3">
+	<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-gallery-modal>
+		<div class="w-full max-w-4xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-gallery-panel>
+			<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
+				<h2 class="text-[20px] font-semibold text-white">Gallery</h2>
+				<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-gallery-close>Close</button>
+			</div>
+			<div class="flex-1 overflow-y-auto pr-3">
+				{allIllustrations.length > 0 ? (
 					<div class="grid grid-cols-2 gap-4 p-6">
 						{allIllustrations.map((img) => (
 							<button 
@@ -219,30 +219,33 @@ const metadata = [
 							</button>
 						))}
 					</div>
-				</div>
+				) : (
+					<div class="flex flex-col items-center justify-center p-12 text-center">
+						<Icon name="lucide:images" class="size-12 mb-4 text-white/20" />
+						<p class="text-white/50">No illustrations have been added to this series yet.</p>
+					</div>
+				)}
 			</div>
 		</div>
-	) : null}
+	</div>
 
-	{allIllustrations.length > 0 ? (
-		<div class="fixed top-16 left-0 right-0 bottom-0 z-[90] hidden items-center justify-center bg-black/0 opacity-0 transition-[opacity,background-color] duration-220 ease-out" data-gallery-zoom-modal>
-			<div class="relative w-full h-full flex items-center justify-center" data-gallery-zoom-content>
-				<button type="button" class="absolute top-4 right-4 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white transition hover:bg-white/30" data-gallery-zoom-close aria-label="Close zoom">
-					<span class="text-[24px] leading-none">×</span>
-				</button>
-				<img src="" alt="Zoomed illustration" class="max-w-[95vw] max-h-[95vh] object-contain transition-[transform,opacity] duration-220 ease-out" data-gallery-zoom-image />
-			</div>
+	<div class="fixed top-16 left-0 right-0 bottom-0 z-[90] hidden items-center justify-center bg-black/0 opacity-0 transition-[opacity,background-color] duration-220 ease-out" data-gallery-zoom-modal>
+		<div class="relative w-full h-full flex items-center justify-center" data-gallery-zoom-content>
+			<button type="button" class="absolute top-4 right-4 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white transition hover:bg-white/30" data-gallery-zoom-close aria-label="Close zoom">
+				<span class="text-[24px] leading-none">×</span>
+			</button>
+			<img src="" alt="Zoomed illustration" class="max-w-[95vw] max-h-[95vh] object-contain transition-[transform,opacity] duration-220 ease-out" data-gallery-zoom-image />
 		</div>
-	) : null}
+	</div>
 
-	{volumeCredits.length > 0 ? (
-		<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-staff-modal>
-			<div class="w-full max-w-2xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-staff-panel>
-				<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
-					<h2 class="text-[20px] font-semibold text-white">Staff &amp; Credits</h2>
-					<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-staff-close>Close</button>
-				</div>
-				<div class="flex-1 overflow-y-auto pr-3">
+	<div class="fixed inset-0 z-[80] hidden items-center justify-center bg-black/0 px-4 backdrop-blur-0 opacity-0 transition-[opacity,background-color,backdrop-filter] duration-220 ease-out" data-staff-modal>
+		<div class="w-full max-w-2xl max-h-[90vh] rounded-[15px] border border-white/10 bg-[#2f333d] overflow-hidden flex flex-col shadow-[0_18px_60px_rgba(0,0,0,0.45)]" data-staff-panel>
+			<div class="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4">
+				<h2 class="text-[20px] font-semibold text-white">Staff & Credits</h2>
+				<button type="button" class="rounded-[8px] bg-white/10 px-3 py-1 text-[12px] text-white transition hover:bg-white/20" data-staff-close>Close</button>
+			</div>
+			<div class="flex-1 overflow-y-auto pr-3">
+				{volumeCredits.length > 0 ? (
 					<div class="space-y-6 p-6">
 						{volumeCredits.map((vol) => (
 							<div class="space-y-2">
@@ -251,10 +254,15 @@ const metadata = [
 							</div>
 						))}
 					</div>
-				</div>
+				) : (
+					<div class="flex flex-col items-center justify-center p-12 text-center">
+						<Icon name="lucide:users-round" class="size-12 mb-4 text-white/20" />
+						<p class="text-white/50">Staff information is currently unavailable for this series.</p>
+					</div>
+				)}
 			</div>
 		</div>
-	) : null}
+	</div>
 </section>
 
 <script is:inline>
