@@ -37,9 +37,9 @@ const isActive = (href: string) => {
 		</svg>
 	</button>
 	<div class="nav-left divide-white flex flex-grow items-center">
-		<div class="logo flex">
+		<a href="/" class="cursor-pointer hover:brightness-70 transition duration-300 logo flex">
 			<Image src={curryMuncherLogo} alt="" height={40}></Image>
-		</div>
+		</a>
 	</div>
 	<a href={discordUrl} class="discord-button inline-flex items-center gap-2 cursor-pointer rounded-full bg-[#5865F2] px-3 py-1 text-base font-regular text-white shadow-sm transition duration-200 hover:brightness-80 active:scale-[0.98] sm:text-sm">
 		<span class="discord-dot hidden"></span>
