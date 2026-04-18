@@ -1,0 +1,42 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+import {
+    getNovelSlug,
+    getVolumeSlug,
+    toPublicChapterSlug,
+    type ChapterStory,
+} from '@lib/storyblok-novels';
+
+// Filter chapters that have a legacy slug (starting with volume prefix)
+export async function getStaticPaths() {
+    const storyblokApi = useStoryblokApi();
+    const chapters = await storyblokApi.getAll('cdn/stories', {
+        content_type: 'Chapter',
+        starts_with: 'novels/',
+        version: 'published'
+    }) as ChapterStory[];
+
+    const legacyChapters = chapters.filter(chapter => {
+        const volume = getVolumeSlug(chapter.full_slug);
+        return chapter.slug.startsWith(`${volume}-`) && chapter.slug !== toPublicChapterSlug(volume, chapter.slug);
+    });
+
+    const staticPaths = legacyChapters.map((chapter) => ({
+        params: {
+            name: getNovelSlug(chapter.full_slug),
+            chapterSlug: chapter.slug
+        },
+        props: {
+            volume: getVolumeSlug(chapter.full_slug),
+            publicChapterSlug: toPublicChapterSlug(getVolumeSlug(chapter.full_slug), chapter.slug)
+        }
+    }));
+
+    return staticPaths;
+}
+
+const { name } = Astro.params;
+const { volume, publicChapterSlug } = Astro.props;
+
+return Astro.redirect(`/novels/${name}/${volume}/${publicChapterSlug}`, 301);
+---
