@@ -2,6 +2,11 @@ import affiliateGlucose from "@assets/afilliate-banners/glucose-banner.png";
 import affiliateGlucoseLogo from "@assets/afilliate-banners/glucose-logo.png";
 import affiliateLegacy from "@assets/afilliate-banners/legacy-banner.png";
 import affiliateLegacyLogo from "@assets/afilliate-banners/legacy-logo.svg";
+import affiliateSecre from "@assets/afilliate-banners/secre-banner.png";
+import afilliateSecreLogo from "@assets/afilliate-banners/secre-logo.png";
+import afilliateBrons from "@assets/afilliate-banners/bronstl-banner.png";
+import afilliateBronsLogo from "@assets/afilliate-banners/bronstl-logo.webp"
+
 import coverMakeine from "@assets/covers/makeine-cover.jpg";
 import coverPajama from "@assets/covers/pajama-girl-cover.png";
 import coverTottekawa from "@assets/covers/tottekawa-cover.png";
@@ -117,6 +122,8 @@ export const staff: StaffMember[] = [
 export const affiliates: Affiliate[] = [
 	{ name: "Glucose Translations", image: affiliateGlucose, url: "https://glucosetl.xyz", logo: affiliateGlucoseLogo },
 	{ name: "LegacyEMTLs", image: affiliateLegacy, url: "https://www.legacyemtls.com/", logo: affiliateLegacyLogo },
+	{ name: "Secre Translations", image: affiliateSecre, url: "https://secreftls.com/", logo: afilliateSecreLogo },
+	{ name: "BronsTL", image: afilliateBrons, url: "https://bronstl.com/", logo: afilliateBronsLogo },
 ];
 
 export const series = [
